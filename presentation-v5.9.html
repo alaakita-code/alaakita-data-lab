@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#f7f4ed">
+<meta name="description" content="ALAAKITA Public Data Lab V5.9｜以可追溯的資料與證據，建立可審查的研究決策。">
+<title>ALAAKITA｜Public Data Lab 專業研究簡報 V5.9</title>
+<style>
+:root{--paper:#f7f4ed;--paper2:#fcfaf6;--white:#fffdf8;--ink:#29231e;--sub:#686057;--line:#ded5c8;--line2:#ebe3d8;--rust:#a54f39;--rust2:#833d2c;--pale:#f4e7dd;--olive:#596b53;--sage:#eaf0e7;--radius:18px;--rail:256px}
+*,*::before,*::after{box-sizing:border-box}
+html{font-size:16px;scroll-behavior:auto}
+body{margin:0;min-width:0;background:var(--paper);color:var(--ink);font:400 16px/1.72 -apple-system,BlinkMacSystemFont,"Noto Sans TC","Microsoft JhengHei",sans-serif;overflow-x:clip}
+button,a,summary{touch-action:manipulation}
+button{font:inherit;cursor:pointer}
+a{color:var(--rust2);text-decoration-thickness:1px;text-underline-offset:4px}
+:focus-visible{outline:3px solid var(--rust);outline-offset:4px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.app{display:grid;grid-template-columns:var(--rail) minmax(0,1fr);max-width:1720px;min-height:100dvh;margin:auto}
+.rail{position:sticky;top:0;height:100dvh;background:var(--paper2);border-right:1px solid var(--line);padding:31px 19px 21px;display:flex;flex-direction:column;gap:17px;min-width:0}
+.wordmark{font:700 20px/1.2 Georgia,"Noto Serif TC",serif;letter-spacing:.015em;white-space:nowrap}.wordmark span{color:var(--rust)}
+.rail-kicker{font-size:11px;letter-spacing:.17em;color:var(--rust);font-weight:800;margin-top:8px}
+.rail-desc{font-size:13px;color:var(--sub);line-height:1.65;margin:0}
+.rail-rule{border-top:1px solid var(--line);margin:3px 0 0}
+.rail-label{font-size:11px;letter-spacing:.15em;font-weight:800;color:var(--sub);text-transform:uppercase;margin-bottom:8px}
+.chapter-list{display:grid;gap:3px;align-content:start}
+.chapter-btn{display:grid;grid-template-columns:26px minmax(0,1fr);gap:10px;align-items:center;width:100%;border:0;border-radius:9px;background:transparent;text-align:left;padding:9px 9px;color:#625a50;line-height:1.4;font-size:13px;min-height:41px}
+.chapter-btn .n{font:700 12px/1.2 Georgia,serif;color:var(--rust)}
+.chapter-btn:hover{background:#f0e8de}.chapter-btn[aria-current=page]{background:var(--pale);color:var(--rust2);font-weight:750}
+.rail-bottom{margin-top:auto;padding-top:16px;border-top:1px solid var(--line);display:grid;gap:9px}
+.rail-bottom a{font-size:13px;font-weight:700}.rail-bottom .muted{font-size:12px;color:var(--sub)}
+.workspace{min-width:0;min-height:100dvh;display:flex;flex-direction:column}
+.topbar{height:83px;border-bottom:1px solid var(--line);padding:0 clamp(25px,4vw,72px);display:flex;align-items:center;justify-content:space-between;gap:15px}
+.topbar-title{display:flex;align-items:center;gap:13px;min-width:0}.topbar-dot{width:9px;height:9px;background:var(--rust);border-radius:50%;flex:none}
+.topbar-title b{font-size:13px;letter-spacing:.055em}.topbar-title small{font-size:12px;color:var(--sub);display:block;margin-top:2px}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.tag{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;padding:5px 10px;border:1px solid #dfc2b6;border-radius:99px;color:var(--rust2);font-size:11px;font-weight:750;letter-spacing:.07em;background:#fbf0eb}
+.print-btn{background:transparent;border:1px solid var(--line);border-radius:99px;color:var(--ink);font-size:12px;font-weight:750;min-height:35px;padding:5px 13px}
+.main{width:100%;max-width:1240px;margin:0 auto;padding:36px clamp(25px,4vw,72px) 26px;flex:1;min-width:0}
+.progress-top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:19px;color:var(--sub);font-size:12px;font-weight:750;letter-spacing:.10em}
+.progress-track{height:3px;background:#e7ded1;border-radius:10px;overflow:hidden;margin-bottom:23px}.progress-fill{height:100%;background:var(--rust);width:10%;transition:width .25s ease}
+.slide{display:none;min-width:0;animation:slide-in .24s ease both}
+.slide.active{display:block}
+@keyframes slide-in{from{opacity:.3;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.sheet{position:relative;background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:clamp(28px,4.5vw,63px);min-height:570px;overflow:hidden}
+.sheet::after{content:"";position:absolute;top:0;right:0;width:110px;height:4px;background:var(--rust)}
+.eyebrow{font-size:12px;color:var(--rust);letter-spacing:.14em;font-weight:800;text-transform:uppercase;margin:0 0 16px}
+h1,h2,h3,p{margin-top:0}
+h1,h2{font-family:"Noto Serif TC","PMingLiU",Georgia,serif;font-weight:600;letter-spacing:-.028em;line-height:1.32}
+h1{font-size:clamp(43px,5vw,75px);margin:0 0 26px;max-width:830px}
+h2{font-size:clamp(33px,3.7vw,51px);margin:0 0 23px}
+h3{font-size:17px;line-height:1.45;margin:0 0 11px}
+.lead{font-size:clamp(17px,1.7vw,21px);line-height:1.75;color:#49423b;max-width:860px;margin:0 0 23px}
+.subtext{color:var(--sub);font-size:14px;line-height:1.75;margin:0}
+.divider{border-top:1px solid var(--line);margin:25px 0}
+.mini-label{font-size:11px;letter-spacing:.12em;color:var(--rust);font-weight:800;text-transform:uppercase;margin:0 0 10px}
+.figure-note{color:var(--sub);font-size:12px;line-height:1.65;margin:14px 0 0}
+.paper-card{border:1px solid var(--line);border-radius:12px;padding:22px;background:var(--paper2);min-width:0}
+.paper-card p:last-child{margin-bottom:0}
+.stack{display:grid;gap:13px}
+.two-col{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.three-col{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.big-num{font:500 clamp(38px,4vw,55px)/1.1 Georgia,serif;color:var(--ink);margin:8px 0 7px;letter-spacing:-.04em}
+.caption{font-size:12px;color:var(--sub);line-height:1.6}
+.bullet-list{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.bullet-list li{display:flex;gap:14px;align-items:flex-start;padding:16px 0;border-bottom:1px solid var(--line2);font-size:16px;line-height:1.65}
+.bullet-list li:last-child{border-bottom:0}
+.bullet-list .bullet{width:27px;height:27px;border:1px solid #d9c1b5;border-radius:50%;color:var(--rust);font:700 12px/25px Georgia,serif;text-align:center;flex:none;margin-top:1px}
+.bullet-list strong{font-weight:750}
+.note{background:#f5ebe3;border-left:3px solid var(--rust);border-radius:0 9px 9px 0;padding:15px 19px;font-size:14px;line-height:1.7;color:#51463e;margin-top:20px}
+.note.sage{background:var(--sage);border-left-color:var(--olive)}
+.chip{display:inline-flex;align-items:center;gap:5px;border-radius:99px;background:var(--pale);color:var(--rust2);font-size:11px;font-weight:800;padding:5px 10px;letter-spacing:.04em}
+.chip.olive{background:var(--sage);color:var(--olive)}
+.chip.neutral{background:#eee9e1;color:#615b51}
+.cover-layout{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(180px,.6fr);gap:30px;align-items:center;min-height:480px}
+.cover-layout .lead{max-width:660px}.cover-sub{display:flex;flex-wrap:wrap;gap:9px;margin:24px 0 0}
+.cover-art{width:100%;max-width:275px;justify-self:center;opacity:.96}
+.cover-footer{font-size:12px;color:var(--sub);margin-top:35px;padding-top:15px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px}
+.statement{font:600 clamp(23px,2.7vw,34px)/1.58 "Noto Serif TC","PMingLiU",Georgia,serif;letter-spacing:-.015em;margin:0 0 27px;max-width:820px}
+.statement em{font-style:normal;color:var(--rust)}
+.metric-bars{display:grid;gap:25px;margin-top:22px}
+.bar-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 16px;align-items:center}
+.bar-row .bar-label{font-size:14px;font-weight:700}.bar-row .bar-value{font:600 26px/1 Georgia,serif;white-space:nowrap}
+.bar-bg{grid-column:1/-1;height:12px;border-radius:20px;background:#ece5dc;overflow:hidden}
+.bar{height:100%;border-radius:20px;background:var(--rust);width:0}
+.bar.muted{background:#c4aa98}
+.pipeline{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin:24px 0}
+.pipe-step{position:relative;min-width:0;border-top:3px solid var(--rust);padding:12px 7px 10px}
+.pipe-step .pipe-n{font:700 12px Georgia,serif;color:var(--rust)}
+.pipe-step strong{display:block;font-size:16px;line-height:1.45;margin:8px 0 5px}
+.pipe-step small{display:block;color:var(--sub);font-size:12px;line-height:1.55}
+.acl-flow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:26px 0 16px}
+.acl-step{border:1px solid var(--line);border-radius:11px;background:var(--paper2);padding:18px 15px;min-width:0}
+.acl-step .num{font:700 13px Georgia,serif;color:var(--rust);display:block;margin-bottom:10px}
+.acl-step b{display:block;font-size:15px;line-height:1.4;margin-bottom:8px}
+.acl-step small{display:block;font-size:12px;color:var(--sub);line-height:1.6}
+.method{border:1px solid var(--line);border-radius:13px;padding:22px;background:var(--paper2);min-width:0}
+.method.primary{border-color:#c5a394;background:#fcf5ee}
+.method h3{font-family:Georgia,"Noto Serif TC",serif;font-size:25px;overflow-wrap:anywhere;margin:12px 0 12px}
+.method p{font-size:14px;color:#544d45;line-height:1.7;margin-bottom:0}
+.method ul{margin:17px 0 0;padding:15px 0 0 20px;border-top:1px solid var(--line);font-size:13px;line-height:1.7;color:var(--sub)}
+.method li+li{margin-top:4px}
+.gen-flow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin:22px 0}
+.gen-flow>div{border:1px solid var(--line);padding:18px;border-radius:11px;background:var(--paper2)}
+.gen-flow b{display:block;font-size:16px;margin:8px 0 4px}.gen-flow small{font-size:12px;color:var(--sub)}
+.eval-main{display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.3fr);gap:22px;align-items:stretch;margin:15px 0 22px}
+.eval-score{background:var(--pale);border:1px solid #ead1c5;border-radius:12px;padding:25px;display:flex;flex-direction:column;justify-content:center}
+.eval-score .score{font:500 clamp(53px,6vw,80px)/1 Georgia,serif;color:var(--rust2);letter-spacing:-.05em;margin:7px 0 15px}
+.eval-list{display:grid;gap:9px}
+.eval-list>div{display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--line2);padding:9px 0;font-size:14px}
+.eval-list .tick{color:var(--olive);font-size:19px;line-height:1}
+.risk-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:19px}
+.risk-item{border:1px solid var(--line);border-radius:12px;padding:20px;background:var(--paper2)}
+.risk-item .risk-no{color:var(--rust);font:700 12px Georgia,serif}
+.risk-item b{display:block;margin:9px 0;font-size:16px}.risk-item p{font-size:13px;color:var(--sub);margin:0}
+.closing{max-width:860px;margin:20px 0 25px}.closing h2{font-size:clamp(35px,4.2vw,57px)}
+.commitments{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:27px 0}
+.commitment{border-top:3px solid var(--rust);padding:15px 6px 0}
+.commitment .c-no{font:700 12px Georgia,serif;color:var(--rust)}.commitment b{display:block;font-size:17px;margin:7px 0}.commitment small{font-size:12px;color:var(--sub)}
+.action-links{display:flex;flex-wrap:wrap;gap:11px;margin-top:28px}
+.action-links a{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:8px 16px;border-radius:8px;border:1px solid var(--rust);background:var(--rust);color:white;text-decoration:none;font-size:13px;font-weight:700}
+.action-links a.secondary{background:transparent;color:var(--rust2)}
+.below-slide{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:15px 3px 0;font-size:12px;color:var(--sub)}
+.below-slide .evidence{max-width:70%;overflow-wrap:anywhere}
+.footer{text-align:center;font-size:11px;color:var(--sub);padding:11px 20px 21px;letter-spacing:.02em}
+.bottom-controls{display:flex;align-items:center;justify-content:space-between;gap:16px;max-width:1150px;width:100%;padding:17px clamp(25px,4vw,72px) 12px;margin:0 auto}
+.bottom-controls button{border:1px solid var(--rust);background:var(--rust);color:white;border-radius:9px;min-width:115px;min-height:45px;font-weight:750;font-size:14px}
+.bottom-controls button:disabled{opacity:.35;cursor:not-allowed}
+.bottom-controls .counter{font:700 15px Georgia,serif;white-space:nowrap;color:var(--ink)}
+.mobile-header,.mobile-chapters{display:none}
+@media(min-width:1400px){.sheet{min-height:610px}}
+@media(max-width:1100px){:root{--rail:220px}.rail{padding-left:13px;padding-right:13px}.chapter-btn{font-size:12px;gap:7px}.main{padding:26px 26px 20px}.sheet{padding:34px;min-height:0}.topbar{padding:0 26px}.cover-layout{min-height:450px}}
+@media(max-width:850px){
+ .app{display:block}.rail{display:none}.topbar{display:none}.workspace{min-height:100dvh}
+ .mobile-header{display:flex;position:sticky;top:0;z-index:30;min-height:66px;padding:10px 18px;align-items:center;justify-content:space-between;gap:12px;background:rgba(247,244,237,.98);border-bottom:1px solid var(--line)}
+ .mobile-header .wordmark{font-size:18px}.mobile-header small{display:block;font-size:10px;letter-spacing:.1em;color:var(--rust);font-weight:800;margin-top:4px}
+ .mobile-header .mobile-actions{display:flex;gap:8px;align-items:center}.mobile-header button{background:var(--white);border:1px solid var(--line);border-radius:8px;padding:7px 11px;min-height:38px;font-size:12px;font-weight:750;color:var(--ink)}
+ .mobile-chapters{display:block;position:sticky;top:66px;z-index:29;background:var(--paper);border-bottom:1px solid var(--line)}
+ .mobile-chapters summary{display:flex;align-items:center;justify-content:space-between;list-style:none;padding:10px 19px;min-height:44px;font-size:12px;font-weight:750;color:var(--sub);cursor:pointer}
+ .mobile-chapters summary::-webkit-details-marker{display:none}.mobile-chapters summary::after{content:"＋";color:var(--rust);font-size:18px;line-height:1}
+ .mobile-chapters[open] summary::after{content:"−"}
+ .mobile-chapters .mobile-index-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;padding:0 15px 13px;max-height:min(58dvh,390px);overflow:auto}
+ .mobile-chapters .chapter-btn{font-size:12px;border:1px solid var(--line);background:var(--white);min-height:44px;padding:8px 10px}
+ .mobile-chapters .chapter-btn[aria-current=page]{background:var(--pale);border-color:#dfbbaa}
+ .main{padding:18px 16px calc(120px + env(safe-area-inset-bottom))}
+ .progress-top{font-size:11px;margin-bottom:10px}.progress-track{margin-bottom:13px}
+ .sheet{padding:clamp(23px,5vw,36px);min-height:0;border-radius:13px}
+ .sheet::after{width:72px}
+ .bottom-controls{position:fixed;z-index:40;bottom:0;left:0;right:0;max-width:none;padding:10px 15px calc(11px + env(safe-area-inset-bottom));background:rgba(247,244,237,.98);border-top:1px solid var(--line);box-shadow:0 -5px 16px rgba(42,33,26,.035)}
+ .bottom-controls button{min-width:93px;min-height:45px;font-size:13px}.footer{padding-bottom:20px}
+ .cover-layout{min-height:0;grid-template-columns:minmax(0,1fr) 150px;gap:14px}.cover-art{max-width:155px}
+ .pipeline,.acl-flow{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:550px){
+ .mobile-header{padding:9px 14px;min-height:62px}.mobile-header .wordmark{font-size:17px}.mobile-chapters{top:62px}
+ .main{padding:14px 12px calc(112px + env(safe-area-inset-bottom))}
+ .sheet{padding:25px 20px 27px;border-radius:12px}
+ .eyebrow{font-size:10px;letter-spacing:.13em;margin-bottom:10px}
+ h1{font-size:clamp(36px,10vw,47px);line-height:1.34;margin-bottom:15px}
+ h2{font-size:clamp(30px,8.1vw,39px);line-height:1.33;margin-bottom:18px}
+ .lead{font-size:16px;line-height:1.75;margin-bottom:16px}.statement{font-size:21px;line-height:1.65}
+ .cover-layout{display:block}.cover-art{display:none}.cover-footer{margin-top:29px}.cover-sub{margin-top:21px}
+ .two-col,.three-col,.risk-list,.eval-main,.commitments{grid-template-columns:minmax(0,1fr)}
+ .paper-card{padding:17px}.big-num{font-size:42px}.pipeline,.acl-flow{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .pipe-step{padding:10px 3px}.pipe-step strong{font-size:14px}.pipe-step small{font-size:11px}
+ .acl-step{padding:14px 11px}.acl-step b{font-size:13px}.acl-step small{font-size:11px}
+ .method{padding:19px}.method h3{font-size:22px}.gen-flow{grid-template-columns:1fr}
+ .bullet-list li{font-size:14px;gap:11px;padding:13px 0}
+ .note{padding:12px 14px;font-size:13px}.risk-item{padding:16px}.risk-item b{margin:6px 0}
+ .commitments{gap:11px}.commitment{padding:11px 4px 0}.commitment b{font-size:15px}
+ .below-slide{display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:13px 5px}.below-slide .evidence{max-width:none}.footer{padding-bottom:calc(88px + env(safe-area-inset-bottom))}
+ .mobile-chapters .mobile-index-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:359px){.mobile-header .wordmark{font-size:15px}.mobile-header button{padding:6px 8px}.sheet{padding:22px 16px}.pipeline,.acl-flow{grid-template-columns:1fr}.bottom-controls button{min-width:78px}.bottom-controls{gap:8px}.tag{font-size:10px}}
+@media(prefers-reduced-motion:reduce){.slide{animation:none}.progress-fill{transition:none}}
+@media print{
+ @page{size:A4 landscape;margin:10mm}
+ html,body{background:white!important;font-size:12px}
+ .app{display:block;max-width:none}.rail,.topbar,.mobile-header,.mobile-chapters,.progress-top,.progress-track,.bottom-controls,.footer,.below-slide,.action-links{display:none!important}
+ .workspace,.main{display:block;width:100%;max-width:none;padding:0!important;margin:0}
+ .slide,.slide.active{display:block!important;animation:none!important;break-after:page;page-break-after:always}
+ .slide:last-of-type{break-after:auto;page-break-after:auto}
+ .sheet{min-height:175mm!important;height:175mm!important;border:1px solid #ded5c8;border-radius:0;overflow:hidden;padding:12mm!important}
+ .sheet h1{font-size:38pt}.sheet h2{font-size:30pt}.lead{font-size:14pt}.cover-layout{min-height:135mm}
+ .paper-card,.method,.acl-step,.risk-item,.gen-flow>div{break-inside:avoid}
+ .bar,.bar.muted{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="rail" aria-label="簡報章節導覽">
+  <div><div class="wordmark">ALAAKITA<span> / </span>DATA LAB</div><div class="rail-kicker">RESEARCH PRESENTATION</div></div>
+  <p class="rail-desc">從公開資料到可追溯的研究證據，建立可審查的決策流程。</p>
+  <div class="rail-rule"></div>
+  <div><div class="rail-label">CONTENTS · 10 CHAPTERS</div><nav class="chapter-list" id="desktopChapters" aria-label="十頁簡報目錄"></nav></div>
+  <div class="rail-bottom"><a href="./index.html">返回研究工作台 ↗</a><span class="muted">V5.9 · DESIGN REVIEW<br>資料模式：DEMO／非官方統計</span></div>
+</aside>
+<div class="workspace">
+<header class="topbar"><div class="topbar-title"><span class="topbar-dot"></span><div><b>PUBLIC DATA × EVIDENCE</b><small>研究方法 · 資料治理 · 可查核 AI</small></div></div><div class="topbar-right"><span class="tag">DEMO · 模擬資料</span><button class="print-btn" type="button" data-print>列印／PDF</button></div></header>
+<header class="mobile-header"><div><div class="wordmark">ALAAKITA<span> / </span>DATA LAB</div><small>RESEARCH PRESENTATION · V5.9</small></div><div class="mobile-actions"><button type="button" data-print aria-label="列印或另存 PDF">PDF</button><button type="button" id="mobileHome" aria-label="返回研究工作台">工作台 ↗</button></div></header>
+<details class="mobile-chapters" id="mobileChapters"><summary><span id="mobileChapterTitle">章節目錄 · 01 / 10</span><span>快速跳頁</span></summary><nav class="mobile-index-grid" id="mobileChapterGrid" aria-label="手機快速跳頁"></nav></details>
+<main class="main" id="mainContent">
+<div class="progress-top"><span id="progressName">01 / INTRODUCTION</span><span>ALAAKITA · V5.9</span></div>
+<div class="progress-track" role="progressbar" aria-label="簡報閱讀進度" aria-valuemin="1" aria-valuemax="10" aria-valuenow="1" id="progressTrack"><div class="progress-fill" id="progressFill"></div></div>
+
+<section class="slide active" id="slide-01" data-chapter="01 / INTRODUCTION" data-title="研究主張" aria-labelledby="s1title">
+<div class="sheet"><div class="cover-layout"><div><div class="eyebrow">RESEARCH NOTE 01 — PUBLIC DATA LAB</div><h1 id="s1title">用證據回答，<br>而不是憑空推測。</h1><p class="lead">一份關於公開資料、來源治理、檢索邊界與研究品質的工程實作簡報。</p><div class="cover-sub"><span class="chip">可追溯來源</span><span class="chip">檢索前 ACL</span><span class="chip">證據不足即拒答</span></div></div>
+<svg class="cover-art" viewBox="0 0 270 390" role="img" aria-label="資料、證據、決策的研究流程圖"><rect x="12" y="11" width="244" height="366" rx="110" fill="#f6ede3"/><path d="M75 55 C190 80 60 150 170 191 S220 295 112 345" stroke="#a54f39" stroke-width="2.5" fill="none" stroke-dasharray="4 7"/><circle cx="75" cy="55" r="26" fill="#a54f39"/><circle cx="170" cy="191" r="26" fill="#a54f39"/><circle cx="112" cy="345" r="26" fill="#a54f39"/><g font-family="Georgia,serif" font-size="19" fill="white" text-anchor="middle"><text x="75" y="62">01</text><text x="170" y="198">02</text><text x="112" y="352">03</text></g><g font-family="sans-serif" font-size="14" fill="#51473d"><text x="118" y="59">資料</text><text x="74" y="193">證據</text><text x="153" y="350">決策</text></g></svg></div>
+<div class="cover-footer"><span>V5.9 · 專業研究簡報設計版</span><span>研究區間：<span data-period>—</span></span></div></div></section>
+
+<section class="slide" id="slide-02" data-chapter="02 / RESEARCH PURPOSE" data-title="研究問題" aria-labelledby="s2title"><div class="sheet"><div class="eyebrow">02 / THE QUESTION</div><h2 id="s2title">研究問題</h2><p class="statement">使用公開資料時，如何同時做到 <em>來源可追溯</em>、<em>權限不外洩</em>，以及 <em>結論能驗證</em>？</p><div class="three-col"><div class="paper-card"><div class="mini-label">SOURCE</div><h3>來源清楚</h3><p class="subtext">保留資料集、時間戳、原始雜湊與引用識別碼。</p></div><div class="paper-card"><div class="mini-label">BOUNDARY</div><h3>推論有界</h3><p class="subtext">只回答資料能支持的問題，不把觀測值當成交易量。</p></div><div class="paper-card"><div class="mini-label">REPRODUCIBLE</div><h3>結果可重現</h3><p class="subtext">保留處理方法、比較區間與品質檢查紀錄。</p></div></div><div class="note">研究情境為 YouBike 2.0 公開資料。即時可借／可還車數不能直接推導實際租借次數。</div></div></section>
+
+<section class="slide" id="slide-03" data-chapter="03 / SOURCE GOVERNANCE" data-title="資料來源" aria-labelledby="s3title"><div class="sheet"><div class="eyebrow">03 / DATA PROVENANCE</div><h2 id="s3title">資料來源與限制</h2><p class="lead">研究可信度不是從漂亮的圖表開始，而是從資料來源、時間範圍與完整性開始。</p><div class="two-col"><div class="paper-card"><div class="mini-label">DEMO DATA COVERAGE</div><div class="metric-bars"><div class="bar-row"><span class="bar-label">前週擷取時段完整率</span><span class="bar-value" id="previousPct">—</span><div class="bar-bg"><div class="bar muted" id="previousBar"></div></div></div><div class="bar-row"><span class="bar-label">近週擷取時段完整率</span><span class="bar-value" id="recentPct">—</span><div class="bar-bg"><div class="bar" id="recentBar"></div></div></div></div><p class="figure-note">以上數值為 DEMO 合成資料，僅用來示範研究指標的表達方式。</p></div><div class="stack"><div class="paper-card"><div class="mini-label">RESEARCH WINDOW</div><h3 data-period>—</h3><p class="subtext">來源：臺北市 YouBike 2.0 相關公開資料規格；本頁指標不是官方即時統計。</p></div><div class="paper-card"><div class="mini-label">INTEGRITY</div><h3 id="verifiedLabel">—</h3><p class="subtext">本機 SHA-256 可檢查檔案是否改動，不能證明資料已獲官方數位簽章。</p></div></div></div><div class="note">正式引用前，必須重新核對官方資料集、擷取時間、欄位定義及資料授權。</div></div></section>
+
+<section class="slide" id="slide-04" data-chapter="04 / KNOWLEDGE PREPARATION" data-title="證據建構" aria-labelledby="s4title"><div class="sheet"><div class="eyebrow">04 / EVIDENCE PREPARATION</div><h2 id="s4title">從原始資料到證據索引</h2><p class="lead">資料清理不是終點。每段可檢索內容，都應保留它從哪裡來、如何產生，以及誰能看見。</p><div class="pipeline"><div class="pipe-step"><span class="pipe-n">01</span><strong>原始快照</strong><small>來源網址、擷取時間、原始內容</small></div><div class="pipe-step"><span class="pipe-n">02</span><strong>品質檢查</strong><small>欄位驗證、時間戳、去重與異常</small></div><div class="pipe-step"><span class="pipe-n">03</span><strong>文件切分</strong><small>Chunk ID、證據 ID、權限標籤</small></div><div class="pipe-step"><span class="pipe-n">04</span><strong>可查核索引</strong><small>來源引用、SHA-256 與版本資訊</small></div></div><div class="three-col"><div class="paper-card"><div class="mini-label">DOCUMENTS</div><div class="big-num" id="docCount">—</div><p class="caption">示範證據文件，含非公開內容數量</p></div><div class="paper-card"><div class="mini-label">CHUNKS</div><div class="big-num" id="chunkCount">—</div><p class="caption">已建立的文件片段</p></div><div class="paper-card"><div class="mini-label">PUBLIC</div><div class="big-num" id="publicCount">—</div><p class="caption">可供公開檢索的片段</p></div></div></div></section>
+
+<section class="slide" id="slide-05" data-chapter="05 / ACL FIRST" data-title="權限安全" aria-labelledby="s5title"><div class="sheet"><div class="eyebrow">05 / SECURITY BOUNDARY</div><h2 id="s5title">權限必須先於搜尋</h2><p class="lead">未授權文件不應進入檢索結果，更不應被送進模型的提示內容。</p><div class="acl-flow"><div class="acl-step"><span class="num">01</span><b>驗證身分</b><small>由可信任後端確認使用者與角色</small></div><div class="acl-step"><span class="num">02</span><b>執行 ACL</b><small>在檢索前排除未授權片段</small></div><div class="acl-step"><span class="num">03</span><b>相似度檢索</b><small>只在可見文件中尋找證據</small></div><div class="acl-step"><span class="num">04</span><b>產生可核對答案</b><small>只引用授權來源，並保留稽核紀錄</small></div></div><div class="note sage"><strong>核心原則：</strong>沒有權限的資料，模型在回答之前就不應接觸。</div><div class="note"><strong>部署界線：</strong>本網站是公開靜態 DEMO，沒有正式登入與後端 ACL。CLI 的角色切換也不能視為正式權限驗證。</div></div></section>
+
+<section class="slide" id="slide-06" data-chapter="06 / RETRIEVAL" data-title="檢索方法" aria-labelledby="s6title"><div class="sheet"><div class="eyebrow">06 / RETRIEVAL DESIGN</div><h2 id="s6title">兩種檢索方法，<br>不同工程取捨</h2><p class="lead">先讓檢索結果可重現，再決定是否引入需要額外模型權重的語意檢索。</p><div class="two-col"><div class="method primary"><span class="chip">目前 DEMO 使用</span><h3>字元雜湊 TF-IDF</h3><p>以字元 n-gram 向量比較文件與問題；可離線執行，便於重現及除錯。</p><ul><li>不需下載神經網路模型</li><li>適合建立基準測試</li><li>不等同語意 Embedding</li></ul></div><div class="method"><span class="chip neutral">進階選用 · 尚未啟用</span><h3>Multilingual E5</h3><p>可作為語意檢索候選方案，但需另行安裝模型權重並驗證效能。</p><ul><li>需評估本機記憶體與運算成本</li><li>需驗證台灣繁體中文檢索表現</li><li>不能假設已完成模型推論</li></ul></div></div><p class="figure-note">兩種方法是工程選項比較，不代表目前網站同時執行兩套檢索引擎。</p></div></section>
+
+<section class="slide" id="slide-07" data-chapter="07 / GENERATION" data-title="RAG 邊界" aria-labelledby="s7title"><div class="sheet"><div class="eyebrow">07 / GENERATION CONDITIONS</div><h2 id="s7title">有證據，才有回答</h2><p class="lead">生成式 RAG 必須先滿足來源、授權與引用條件；缺少任何一環，都不能把輸出當成可靠結論。</p><div class="gen-flow"><div><span class="mini-label">01 · RETRIEVE</span><b>取得授權證據</b><small>來源有效、權限合格、片段可追溯</small></div><div><span class="mini-label">02 · GENERATE</span><b>組織可引用答案</b><small>正式導入時，模型只能使用授權片段</small></div><div><span class="mini-label">03 · REVIEW</span><b>檢查每個主張</b><small>核對數字、來源 ID、限制與人工審核</small></div></div><div class="two-col"><div class="paper-card"><span class="chip olive">證據充分</span><h3 style="margin-top:12px">附來源、附條件</h3><p class="subtext">答案必須能回查原始文件與研究區間。</p></div><div class="paper-card"><span class="chip">證據不足</span><h3 style="margin-top:12px">明確拒答</h3><p class="subtext">不推測實際交易量、調度績效或未觀測的因果關係。</p></div></div><div class="note">V5.9 公開展示頁未連接 LLM／Ollama。此頁說明的是正式 RAG 的必要條件，不是聲稱已完成生成式問答。</div></div></section>
+
+<section class="slide" id="slide-08" data-chapter="08 / EVALUATION" data-title="品質評估" aria-labelledby="s8title"><div class="sheet"><div class="eyebrow">08 / QUALITY ASSURANCE</div><h2 id="s8title">檢索品質，不只看命中</h2><p class="lead">好的證據系統必須知道何時回答，也必須知道何時拒答。</p><div class="eval-main"><div class="eval-score"><div class="mini-label">預設情境測試</div><div class="score" id="evalScore">—</div><span class="chip olive">符合預設結果</span><p class="figure-note">不是大型語言模型的整體準確率，也不是正式環境效能數字。</p></div><div class="paper-card"><div class="mini-label">TEST COVERAGE</div><div class="eval-list"><div><span class="tick">✓</span><span>近期擷取時段完整率</span></div><div><span class="tick">✓</span><span>前週擷取時段完整率</span></div><div><span class="tick">✓</span><span>可比較時段數</span></div><div><span class="tick">✓</span><span>近週零車觀測比率</span></div><div><span class="tick">✓</span><span>實際租借次數 → 應拒答</span></div><div><span class="tick">✓</span><span>調度績效 → 應拒答</span></div></div></div></div><div class="note sage">本次 6 題包含 4 題證據命中、2 題證據不足拒答；測試資料與預期答案皆為預設 DEMO 情境。</div></div></section>
+
+<section class="slide" id="slide-09" data-chapter="09 / RISKS" data-title="風險與限制" aria-labelledby="s9title"><div class="sheet"><div class="eyebrow">09 / LIMITATIONS</div><h2 id="s9title">這些事情，<br>不能交給 AI 猜測</h2><p class="lead">模型可以協助組織資訊，但不能替代資料真實性確認、法律判斷或正式稽核。</p><div class="risk-list"><div class="risk-item"><span class="risk-no">01 / AUTHENTICITY</span><b>來源真實性</b><p>雜湊相符，不代表來源已獲官方認證。</p></div><div class="risk-item"><span class="risk-no">02 / CAUSALITY</span><b>交易與因果推論</b><p>即時站點觀測，不能直接推導租借交易量或調度成效。</p></div><div class="risk-item"><span class="risk-no">03 / SECURITY</span><b>正式權限與稽核</b><p>瀏覽器角色選項，不能取代後端登入與 ACL。</p></div><div class="risk-item"><span class="risk-no">04 / EVIDENCE</span><b>未驗證數值</b><p>來源不明或資料不足時，應拒答並記錄原因。</p></div></div><div class="note">本簡報的 DEMO 數據僅供展示方法，不可作為官方績效、政策或營運決策依據。</div></div></section>
+
+<section class="slide" id="slide-10" data-chapter="10 / DECISION" data-title="研究結論" aria-labelledby="s10title"><div class="sheet"><div class="eyebrow">10 / FROM EVIDENCE TO DECISION</div><div class="closing"><h2 id="s10title">讓研究可以被追問，<br>也可以被驗證。</h2><p class="lead">先確認資料可信，再檢索授權文件；AI 協助組織解釋，人工負責查核與決策。</p></div><div class="commitments"><div class="commitment"><span class="c-no">01</span><b>資料有來源</b><small>保留時間、版本、欄位定義與完整性紀錄。</small></div><div class="commitment"><span class="c-no">02</span><b>回答有邊界</b><small>權限先行，證據不足就明確拒答。</small></div><div class="commitment"><span class="c-no">03</span><b>決策可審查</b><small>來源引用、評估結果與人工確認缺一不可。</small></div></div><div class="divider"></div><div class="mini-label">NEXT STEP</div><p class="subtext">下一階段將以正式 API 擷取、歷史資料品質測試與可信任的後端 ACL 作為優先驗證方向；這些能力目前不視為已上線。</p><div class="action-links"><a href="./index.html">返回研究工作台</a><a class="secondary" id="sourceLink" href="https://data.gov.tw/dataset/137993" target="_blank" rel="noopener noreferrer">查閱資料集規格 ↗</a></div></div></section>
+
+<div class="below-slide"><span class="evidence">研究證據 ID：<span id="evidenceId">—</span></span><span>DEMO 模擬資料 · 非即時官方統計</span></div>
+</main>
+<div class="bottom-controls" role="navigation" aria-label="簡報翻頁控制"><button id="prev" type="button">上一頁</button><span class="counter" id="counter" aria-live="polite">01 / 10</span><button id="next" type="button">下一頁</button></div>
+<footer class="footer">ALAAKITA · PUBLIC DATA LAB · V5.9</footer>
+</div></div>
+<script id="research-data" type="application/json">{"mode":"DEMO","evidence_id":"ac241e37851c656cbbfd","generated_at":"2026-11-09T19:23:58+08:00","source_integrity_verified":true,"dataset_url":"https://data.gov.tw/dataset/137993","window":{"first_day":"2026-10-26","previous_end":"2026-11-01","recent_start":"2026-11-02","last_day":"2026-11-08","label":"最近有資料之 14 天（不保證是今天前 14 天）"},"docs_count":29,"chunks_count":29,"public_chunks_count":27,"method":"hash-tfidf","model_used":false,"metrics":{"previous_slot_coverage_pct":95.24,"recent_slot_coverage_pct":90.48,"previous_usable_coverage_pct":95.24,"recent_usable_coverage_pct":90.48,"expected_slots_per_week":21,"previous_slots":20,"recent_slots":19,"comparable_slot_count":18,"matched_station_observations":143,"avg_bikes_change":-1.112,"previous_zero_pct_matched":9.09,"recent_zero_pct_matched":16.08,"recent_zero_change_points":6.99,"selected_snapshot_count":39,"source_changed_count":0,"source_missing_count":0},"evaluation":{"total":6,"passed":6,"rows":[{"question":"近週擷取時段完整率是多少","expect":"metric:recent_slot_coverage_pct","role":"PUBLIC","status":"EVIDENCE_FOUND","passed":true,"hit_ids":["metric:recent_slot_coverage_pct","metric:previous_slot_coverage_pct","metric:recent_slots","metric:previous_slots"]},{"question":"前週擷取時段完整率是多少","expect":"metric:previous_slot_coverage_pct","role":"PUBLIC","status":"EVIDENCE_FOUND","passed":true,"hit_ids":["metric:previous_slot_coverage_pct","metric:recent_slot_coverage_pct","metric:previous_slots","metric:recent_slots"]},{"question":"可比較時段數是多少","expect":"metric:comparable_slot_count","role":"PUBLIC","status":"EVIDENCE_FOUND","passed":true,"hit_ids":["metric:comparable_slot_count","district:松山區","metric:expected_slots_per_week","limitation:0"]},{"question":"近週零車觀測比率是多少","expect":"metric:recent_zero_pct_matched","role":"PUBLIC","status":"EVIDENCE_FOUND","passed":true,"hit_ids":["district:松山區","metric:recent_zero_pct_matched","metric:previous_zero_pct_matched","district:信義區"]},{"question":"實際租借次數是多少","expect":"NO_EVIDENCE","role":"PUBLIC","status":"NO_EVIDENCE","passed":true,"hit_ids":[]},{"question":"調度績效有沒有提高","expect":"NO_EVIDENCE","role":"PUBLIC","status":"NO_EVIDENCE","passed":true,"hit_ids":[]}],"note":"命中／拒答測試是以人工指定的期望值驗證；不代表生成內容的真實性或模型的全面準確率。"},"version":"5.9","based_on":"V5.8"}</script>
+<script>
+(function(){'use strict';
+const D=JSON.parse(document.getElementById('research-data').textContent);
+const slides=[...document.querySelectorAll('section.slide')];
+const desktop=document.getElementById('desktopChapters');
+const mobile=document.getElementById('mobileChapterGrid');
+const mobileDetails=document.getElementById('mobileChapters');
+const pageCounter=document.getElementById('counter');
+let page=0;
+function put(id,value){const e=document.getElementById(id);if(e)e.textContent=String(value)}
+function fmt(n){return String(n).padStart(2,'0')}
+function period(){return D.window.first_day+' — '+D.window.last_day}
+function chapterButton(slide,i){const b=document.createElement('button');b.type='button';b.className='chapter-btn';b.dataset.goto=String(i);b.innerHTML='<span class="n">'+fmt(i+1)+'</span><span></span>';b.lastChild.textContent=slide.dataset.title;b.setAttribute('aria-label','前往第 '+(i+1)+' 頁：'+slide.dataset.title);b.addEventListener('click',()=>{go(i);mobileDetails.open=false});return b}
+slides.forEach((s,i)=>{desktop.appendChild(chapterButton(s,i));mobile.appendChild(chapterButton(s,i))});
+document.querySelectorAll('[data-period]').forEach(e=>e.textContent=period());
+put('verifiedLabel',D.source_integrity_verified?'本機 SHA-256 核對通過':'未通過，禁止引用');
+put('docCount',D.docs_count);put('chunkCount',D.chunks_count);put('publicCount',D.public_chunks_count);
+put('previousPct',D.metrics.previous_slot_coverage_pct.toFixed(2)+'%');put('recentPct',D.metrics.recent_slot_coverage_pct.toFixed(2)+'%');
+document.getElementById('previousBar').style.width=D.metrics.previous_slot_coverage_pct+'%';
+document.getElementById('recentBar').style.width=D.metrics.recent_slot_coverage_pct+'%';
+put('evalScore',D.evaluation.passed+' / '+D.evaluation.total);put('evidenceId',D.evidence_id);
+const source=document.getElementById('sourceLink');source.href=D.dataset_url;
+function go(n,hash=true){page=Math.max(0,Math.min(n,slides.length-1));slides.forEach((s,i)=>{const active=i===page;s.classList.toggle('active',active);s.setAttribute('aria-hidden',active?'false':'true')});
+ document.querySelectorAll('[data-goto]').forEach(b=>{if(Number(b.dataset.goto)===page)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
+ put('counter',fmt(page+1)+' / '+fmt(slides.length));put('progressName',slides[page].dataset.chapter);put('mobileChapterTitle','章節目錄 · '+fmt(page+1)+' / '+fmt(slides.length));
+ document.getElementById('progressFill').style.width=((page+1)/slides.length*100)+'%';document.getElementById('progressTrack').setAttribute('aria-valuenow',String(page+1));
+ document.getElementById('prev').disabled=page===0;document.getElementById('next').disabled=page===slides.length-1;
+ if(hash&&location.hash!=='#slide-'+fmt(page+1)){try{history.replaceState(null,'','#slide-'+fmt(page+1))}catch(e){}}
+ window.scrollTo({top:0,behavior:'instant'});
+}
+function fromHash(){const m=location.hash.match(/^#slide-(\d{1,2})$/);return m?Math.min(slides.length-1,Math.max(0,Number(m[1])-1)):0}
+document.getElementById('prev').addEventListener('click',()=>go(page-1));document.getElementById('next').addEventListener('click',()=>go(page+1));
+document.querySelectorAll('[data-print]').forEach(b=>b.addEventListener('click',()=>window.print()));
+document.getElementById('mobileHome').addEventListener('click',()=>{location.href='./index.html'});
+window.addEventListener('hashchange',()=>go(fromHash(),false));
+document.addEventListener('keydown',e=>{if(e.altKey||e.ctrlKey||e.metaKey||['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName))return;if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();go(page+1)}else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(page-1)}else if(e.key==='Home'){e.preventDefault();go(0)}else if(e.key==='End'){e.preventDefault();go(slides.length-1)}});
+let x0=null,y0=null;const main=document.getElementById('mainContent');
+main.addEventListener('touchstart',e=>{if(e.touches.length===1){x0=e.touches[0].clientX;y0=e.touches[0].clientY}},{passive:true});
+main.addEventListener('touchend',e=>{if(x0===null||!e.changedTouches.length)return;const dx=e.changedTouches[0].clientX-x0,dy=e.changedTouches[0].clientY-y0;x0=y0=null;if(Math.abs(dx)>90&&Math.abs(dx)>Math.abs(dy)*1.7){go(page+(dx<0?1:-1))}},{passive:true});
+go(fromHash(),false);
+})();
+</script>
+</body></html>
