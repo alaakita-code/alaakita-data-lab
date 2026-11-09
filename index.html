@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+
+<html lang="zh-Hant-TW"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="light" name="color-scheme"/><title>ALAAKITA｜V5.8 固定框架證據研究工作台</title>
+<style>
+:root{
+ --bg:#f8f6f1;--surface:#fffefa;--sidebar:#fdfbf6;--ink:#25231f;--muted:#5e5b53;
+ --line:#d9d5ca;--accent:#a54f39;--accent-dark:#863a29;--soft:#f4ece1;
+ --positive:#e9f1e4;--radius:13px;--side:246px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{font-size:16px;scroll-behavior:auto}
+body{margin:0;min-width:0;background:var(--bg);color:var(--ink);font:400 1rem/1.72 -apple-system,BlinkMacSystemFont,'Noto Sans TC','Microsoft JhengHei',Arial,sans-serif;overflow-x:clip}
+button,input,select{font:inherit}button{cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+a{color:var(--accent-dark);text-underline-offset:3px;overflow-wrap:anywhere}
+h1,h2,h3,h4,p{margin:0 0 12px}h1,h2{font-family:'Noto Serif TC','PMingLiU',Georgia,serif;letter-spacing:.01em}
+h1{font-size:clamp(2.05rem,2.8vw,2.65rem);line-height:1.3;font-weight:600}
+h2{font-size:clamp(1.9rem,2.4vw,2.4rem);font-weight:600;line-height:1.3}
+h3{font-size:1.14rem;line-height:1.45;font-weight:700}h4{font-size:1rem}
+.app-frame{display:grid;grid-template-columns:var(--side) minmax(0,1fr);max-width:1780px;min-height:100dvh;margin:0 auto}
+.app-sidebar{position:sticky;top:0;align-self:start;height:100dvh;display:flex;flex-direction:column;gap:0;background:var(--sidebar);border-right:1px solid var(--line);padding:31px 17px 24px;z-index:10}
+.brand{font:700 1.24rem/1.3 Georgia,'Noto Serif TC',serif;letter-spacing:.055em;white-space:nowrap}
+.brand .slash{color:var(--accent)}.brand-sub{font-size:.9rem;color:var(--muted);margin-top:9px;line-height:1.5}
+.workspace-stamp{font-size:.76rem;letter-spacing:.10em;font-weight:700;color:var(--accent);margin:37px 9px 13px}
+.nav{display:flex;flex-direction:column;gap:7px}
+.nav .tab{border:1px solid transparent;background:transparent;text-align:left;width:100%;font-size:1rem;font-weight:550;color:#504b43;border-radius:9px;min-height:51px;padding:11px 14px;transition:background .12s,color .12s;white-space:nowrap}
+.nav .tab:hover{background:#f4ede4}.nav .tab[aria-selected=true]{background:var(--accent);color:white;font-weight:700}
+.sidebar-bottom{margin-top:auto;border-top:1px solid var(--line);padding:18px 9px 0;font-size:.83rem;color:var(--muted);line-height:1.65}
+.app-body{min-width:0;display:flex;flex-direction:column;min-height:100dvh}
+.workspace-top{background:var(--surface);border-bottom:1px solid var(--line);padding:18px clamp(20px,3vw,44px) 17px;display:flex;gap:12px 22px;align-items:center;justify-content:space-between;min-height:85px}
+.top-heading{font-size:1.05rem;font-weight:700;letter-spacing:.02em}.top-caption{color:var(--muted);font-size:.88rem;margin:3px 0 0}
+.pills{display:flex;flex-wrap:wrap;gap:7px;align-items:center;justify-content:flex-end;max-width:690px}
+.pill{border:1px solid var(--line);background:#fdfcf9;border-radius:50px;padding:5px 10px;font-size:.78rem;color:#514b43;line-height:1.5;white-space:nowrap}
+.pill.bad{background:#fff0eb;border-color:#ebd6ce;color:#8f3c2a}.pill.good{background:var(--positive);border-color:#d7e4cd;color:#31583f}
+.workspace-content{width:100%;max-width:1530px;margin:0 auto;padding:clamp(25px,3vw,44px) clamp(20px,3vw,44px) 72px;flex:1;min-width:0}
+.panel[hidden]{display:none!important}.panel{width:100%;min-width:0}
+.sectionhead{max-width:1100px;margin:0 0 25px;padding:0 0 18px;border-bottom:1px solid var(--line)}
+.eyebrow{display:block;text-transform:uppercase;font-size:.78rem;letter-spacing:.105em;color:var(--accent);font-weight:700;margin-bottom:9px}
+.sectionhead h2{margin:0 0 10px}.desc{font-size:1rem;color:var(--muted);line-height:1.7;margin:0;max-width:1050px}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin:0 0 19px}
+.stat{border:1px solid var(--line);background:var(--surface);border-radius:var(--radius);padding:20px 20px 18px;min-width:0;min-height:140px}
+.stat label{display:block;font-size:.95rem;color:var(--muted);margin:0 0 2px}
+.stat b{display:block;font-size:2.05rem;line-height:1.25;font-family:Georgia,serif;font-weight:500;margin:8px 0;overflow-wrap:anywhere}
+.stat small{display:block;font-size:.86rem;color:var(--muted);line-height:1.5}
+.layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:17px;align-items:stretch}
+.sheet{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:clamp(20px,2.1vw,29px);min-width:0;overflow-wrap:anywhere}
+.sheet h3{margin-bottom:17px}.sheet p:last-child{margin-bottom:0}.sheet .desc{font-size:.93rem}
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:15px 0 22px}
+.step{min-width:0;border-top:3px solid var(--accent);padding:10px 4px 0;font-size:.93rem;line-height:1.5;overflow-wrap:anywhere}
+.step b{display:block;font-size:.75rem;color:var(--accent);margin-bottom:5px}
+.notice{padding:17px 21px;border-left:4px solid var(--accent);background:var(--soft);border-radius:5px;font-size:.96rem;color:#4a4038;line-height:1.65}
+.formrow{display:flex;gap:12px;align-items:stretch}
+.search{flex:1;min-width:0;border:1px solid #a9a396;border-radius:8px;padding:13px 17px;min-height:51px;background:white;color:var(--ink);font-size:1.04rem}
+.btn{background:var(--accent);border:1px solid var(--accent);color:white;padding:11px 21px;min-height:46px;border-radius:9px;font-weight:650;font-size:.97rem;white-space:nowrap}
+.btn.secondary{background:var(--surface);color:var(--accent-dark)}.btn:hover{filter:brightness(.96)}
+.suggestions{display:flex;flex-wrap:wrap;gap:9px;margin:18px 0 20px}
+.suggestions button{font-size:.93rem;border:1px solid var(--line);border-radius:50px;background:var(--surface);color:#514b43;padding:8px 12px;min-height:39px}
+.response{grid-column:1 / -1;border-top:1px solid var(--line);padding:19px 0 0;margin-top:2px}
+.response h3{margin:5px 0 2px;font-size:1.13rem}.response .status{font-size:.79rem;color:var(--accent);font-weight:700;letter-spacing:.04em}
+#answer{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+#answer .placeholder{grid-column:1/-1}
+.result{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:19px 20px;min-width:0;overflow-wrap:anywhere}
+.result h4{font-size:1.06rem;line-height:1.45;margin:4px 0 8px}
+.result p{font-size:.97rem;line-height:1.66;color:#48443d;margin:7px 0 10px}
+.result a{font-size:.97rem;font-weight:550}
+.mono{font:400 .80rem/1.65 ui-monospace,'Cascadia Code',Consolas,monospace;overflow-wrap:anywhere;color:var(--muted)}
+.smallcaps{font-size:.77rem;letter-spacing:.055em;color:var(--accent);text-transform:uppercase;font-weight:600}
+.toolbar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px 22px;margin:0 0 20px}
+.toolbar>div:last-child{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.toolbar select{min-height:44px;max-width:100%;font-size:.96rem;border:1px solid var(--line);border-radius:8px;padding:8px 12px;background:var(--surface)}
+.doclist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:stretch}
+.doclist .result{margin:0;min-height:205px;display:flex;flex-direction:column;align-items:flex-start}
+.doclist .result .mono{margin-top:auto;padding-top:7px}.doclist .result a{margin-top:4px}
+.table-wrap{overflow-x:auto;max-width:100%}table{width:100%;border-collapse:collapse;font-size:.96rem;min-width:700px;line-height:1.55}
+th,td{border-bottom:1px solid var(--line);padding:15px 13px;text-align:left;vertical-align:top}
+th{font-size:.88rem;font-weight:700;color:var(--muted);background:#f9f6f0;white-space:nowrap}
+td{overflow-wrap:anywhere}tbody tr:last-child td{border-bottom:0}
+.tag{display:inline-block;background:var(--positive);color:#355640;border-radius:18px;padding:4px 11px;font-size:.86rem;font-weight:650;white-space:nowrap}
+.tag.warn{background:#fbe9e2;color:#8c422d}
+details{margin:14px 0 0;border:1px solid var(--line);padding:16px 19px;border-radius:10px;background:var(--surface);font-size:1rem}
+summary{cursor:pointer;font-weight:650}.foot{border-top:1px solid var(--line);padding:19px 25px 23px;text-align:center;color:var(--muted);font-size:.83rem;line-height:1.65}
+.placeholder{text-align:center;padding:27px 12px;color:var(--muted)}
+#guide .layout .sheet{height:100%}
+@media(min-width:1650px){.doclist{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:1180px){:root{--side:218px}.app-sidebar{padding-inline:11px}.brand{font-size:1.08rem}.workspace-content{padding-inline:26px}.workspace-top{padding-inline:26px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.layout{grid-template-columns:1fr}.steps{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:900px){
+ .app-frame{display:flex;flex-direction:column;width:100%}.app-sidebar{width:100%;max-width:100%;min-width:0;position:sticky;top:0;height:auto;padding:12px 22px 0;border-right:0;border-bottom:1px solid var(--line);gap:0;box-shadow:0 2px 8px #28231c0b}
+ .brand-sub,.workspace-stamp,.sidebar-bottom{display:none}
+ .brand{font-size:1.11rem;padding-bottom:9px}.nav{flex-direction:row;overflow-x:auto;scrollbar-width:thin;gap:5px;padding:0 0 8px}
+ .nav{width:100%;min-width:0;max-width:100%} .nav .tab{min-height:42px;text-align:center;padding:8px 13px;font-size:.96rem;width:auto;flex:0 0 auto}
+ .workspace-top{padding:15px 22px;min-height:0;display:block}.top-caption{margin-bottom:11px}.pills{justify-content:flex-start;gap:6px}
+ .workspace-content{padding:26px 22px 60px}.doclist{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .layout{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+ body{font-size:1rem}.app-sidebar{padding:11px 14px 0}.brand{font-size:1.04rem}.nav .tab{font-size:.9rem;min-height:41px;padding:8px 12px}
+ .nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;overflow:visible} .nav .tab{width:100%;min-width:0;white-space:normal;text-align:center;font-size:.88rem;padding:7px 4px} .workspace-top{padding:13px 14px}.top-heading{font-size:.98rem}.top-caption{font-size:.84rem}.pill{font-size:.74rem;padding:4px 9px}
+ .workspace-content{padding:21px 14px 48px}.sectionhead{margin-bottom:18px;padding-bottom:16px}.sectionhead h2{font-size:1.8rem}.desc{font-size:.95rem}
+ .stats{gap:9px;margin-bottom:13px}.stat{padding:15px 12px;min-height:132px}.stat label{font-size:.85rem}.stat b{font-size:1.73rem}.stat small{font-size:.78rem}
+ .sheet{padding:17px 16px}.steps{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+ .formrow{flex-direction:column}.formrow .btn{width:100%}.search{font-size:1rem}
+ .suggestions{margin:13px 0 16px}.suggestions button{font-size:.84rem}
+ #answer,.doclist{grid-template-columns:1fr}.result{padding:16px}.doclist .result{min-height:0}
+ .toolbar{align-items:stretch}.toolbar>div:last-child{justify-content:space-between}
+ #eval .table-wrap{overflow:visible}
+ #eval table{display:block;width:100%;min-width:0}
+ #eval thead{display:none}#eval tbody{display:grid;grid-template-columns:1fr;gap:11px}
+ #eval tr{display:grid;grid-template-columns:1fr;border:1px solid var(--line);border-radius:10px;padding:12px 13px;background:var(--surface)}
+ #eval td{display:grid;grid-template-columns:minmax(76px,26%) 1fr;gap:9px;border:0;padding:5px 0;font-size:.9rem}
+ #eval td::before{font-size:.84rem;font-weight:700;color:var(--muted)}
+ #eval td:nth-child(1)::before{content:'問題'}#eval td:nth-child(2)::before{content:'預期'}#eval td:nth-child(3)::before{content:'狀態'}#eval td:nth-child(4)::before{content:'結果'}
+ .foot{padding:16px 10px 22px}
+}
+@media(max-width:359px){.brand{font-size:.96rem}.stats{grid-template-columns:1fr 1fr}.stat b{font-size:1.5rem}.result p{font-size:.92rem}.nav .tab{font-size:.86rem}}
+@media print{
+ .app-frame{display:block}.app-sidebar,.workspace-top,.toolbar,.formrow,.suggestions,.btn{display:none!important}
+ .app-body{display:block}.workspace-content{padding:0;max-width:none}
+ .panel{break-before:page}.panel[hidden]{display:block!important}
+ .sheet,.stat,.result{break-inside:avoid}.doclist{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+</style><style id="v53-fixed-shell">
+/* V5.8 stable shell: only the workspace content pane scrolls. */
+html,body{width:100%;height:100%;max-width:100%;overflow:hidden!important;overscroll-behavior:none}
+body{position:relative;min-width:0}
+.app-frame{width:100%;max-width:none;min-width:0;height:100vh;height:100dvh;min-height:0;margin:0;display:grid;grid-template-columns:250px minmax(0,1fr);overflow:hidden}
+.app-sidebar{position:relative!important;top:auto!important;left:auto!important;align-self:stretch;min-width:0;width:250px;height:100%;min-height:0;overflow:hidden;flex:0 0 auto;display:flex;flex-direction:column;padding:22px 16px 20px;box-shadow:none}
+.brand{font-size:1.16rem!important;letter-spacing:0!important;line-height:1.25;white-space:normal!important;display:flex;flex-direction:column;gap:3px;min-width:0;max-width:100%;overflow:hidden}
+.brand-main,.brand-second{display:block;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:clip}
+.brand-second{font-size:1.08rem}
+.brand-sub{margin-top:10px;font-size:.89rem;line-height:1.5;overflow-wrap:normal;word-break:keep-all}
+.workspace-stamp{margin:26px 0 10px;white-space:nowrap;font-size:.77rem;letter-spacing:.06em;overflow:hidden}
+.nav{width:100%;min-width:0;overflow:hidden;gap:7px}
+.nav .tab{width:100%;min-width:0;white-space:nowrap!important;overflow:hidden;text-overflow:clip;line-height:1.35;padding:12px 13px;min-height:47px}
+.app-body{min-width:0;min-height:0;height:100%;overflow:hidden;display:flex;flex-direction:column}
+.workspace-top{position:relative!important;top:auto!important;flex:0 0 76px;height:76px;min-height:76px;max-height:76px;overflow:hidden;display:flex;flex-wrap:nowrap;align-items:center;justify-content:space-between;padding:11px clamp(18px,2.5vw,34px)}
+.workspace-top>div:first-child{min-width:175px;flex:0 1 auto}
+.top-heading{font-size:1.04rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top-caption{font-size:.82rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:1px 0 0}
+.pills{display:flex;flex:0 1 auto;max-width:700px;min-width:0;flex-wrap:nowrap;align-items:center;justify-content:flex-end;gap:6px;overflow:hidden}
+.pill{font-size:.76rem;padding:4px 8px;flex:0 0 auto;line-height:1.4}
+.workspace-content{flex:1 1 0;min-height:0;min-width:0;width:100%;max-width:none;margin:0;padding:28px clamp(18px,2.4vw,38px) 38px;overflow-y:scroll;overflow-x:hidden;overscroll-behavior:contain;overflow-anchor:none;scrollbar-gutter:stable;scroll-behavior:auto}
+.workspace-content>.panel{max-width:1390px;margin:0 auto;min-height:0}
+.sectionhead{width:100%;max-width:none;margin-bottom:21px;padding:0 0 18px}
+.sectionhead h2{font-size:clamp(1.85rem,2.25vw,2.35rem)}
+.desc{font-size:1.02rem;line-height:1.65;max-width:none}
+.status-explainer{font-size:.91rem;color:var(--muted);margin-top:7px}
+.stats{grid-template-columns:repeat(4,minmax(0,1fr));gap:15px}
+.stat{min-width:0}
+.stat label{font-size:.99rem}.stat small{font-size:.9rem}
+.layout{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);align-items:stretch}
+.sheet{min-width:0}
+.result{min-width:0}.doclist{grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.mono{font-size:.87rem;line-height:1.55}
+.table-wrap{overflow:visible!important}table{min-width:0;width:100%;table-layout:fixed}
+th,td{font-size:.96rem;padding:14px 12px;overflow-wrap:anywhere}
+th:nth-child(1){width:31%}th:nth-child(2){width:35%}th:nth-child(3){width:22%}th:nth-child(4){width:12%}
+.foot{flex:0 0 42px;min-height:42px;max-height:42px;overflow:hidden;padding:10px 16px;font-size:.78rem;line-height:1.6;white-space:nowrap;text-overflow:ellipsis}
+/* Intermediate displays: never let header badges or tables enlarge the layout. */
+@media (max-width:1380px){
+ .pills .pill:nth-child(n+4){display:none}
+ .workspace-top>div:first-child{min-width:180px}
+}
+@media (max-width:1170px) and (min-width:901px){
+ .app-frame{grid-template-columns:220px minmax(0,1fr)}.app-sidebar{width:220px;padding-inline:13px}
+ .pills .pill:nth-child(n+3){display:none}
+ .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .layout{grid-template-columns:1fr}
+ .doclist{grid-template-columns:1fr}
+ #eval .table-wrap{padding:0;background:transparent;border:0}
+ #eval table{display:block;min-width:0}
+ #eval thead{display:none}
+ #eval tbody{display:grid;grid-template-columns:1fr;gap:12px}
+ #eval tr{display:grid;grid-template-columns:1fr;border:1px solid var(--line);border-radius:10px;padding:13px 17px;background:var(--surface)}
+ #eval td{display:grid;grid-template-columns:115px minmax(0,1fr);gap:14px;border:0;padding:7px 0}
+ #eval td::before{font-weight:700;color:var(--muted)}
+ #eval td:nth-child(1)::before{content:'問題'}#eval td:nth-child(2)::before{content:'預期'}#eval td:nth-child(3)::before{content:'狀態'}#eval td:nth-child(4)::before{content:'結果'}
+}
+/* Tablet/mobile: the top bars stay still; only the content region scrolls. */
+@media(max-width:900px){
+ .app-frame{display:flex;flex-direction:column;width:100%;height:100vh;height:100dvh;overflow:hidden}
+ .app-sidebar{position:relative!important;top:auto!important;width:100%;height:auto;min-height:0;max-height:none;flex:0 0 auto;padding:9px 16px 9px;box-shadow:none;overflow:hidden}
+ .brand{display:block;white-space:nowrap!important;font-size:1.02rem!important;line-height:1.15;gap:0;padding:0;margin:0 0 8px}
+ .brand-main,.brand-second{display:inline;font-size:inherit;white-space:nowrap}
+ .brand-main::after{content:' '}
+ .brand-sub,.workspace-stamp{display:none}
+ .nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;overflow:hidden;padding:0}
+ .nav .tab{width:100%;font-size:.91rem;white-space:nowrap!important;min-height:41px;padding:8px 2px;text-align:center;overflow:hidden}
+ .app-body{flex:1 1 0;height:auto;min-height:0;overflow:hidden}
+ .workspace-top{height:54px;max-height:54px;min-height:54px;flex:0 0 54px;padding:8px 17px;display:flex;gap:12px;min-width:0}
+ .workspace-top>div:first-child{min-width:0;flex:1 1 auto}
+ .top-heading{font-size:.98rem}
+ .top-caption{display:none}
+ .pills{display:flex;flex:0 0 auto;max-width:60%}
+ .pills .pill:nth-child(n+3){display:none}
+ .workspace-content{flex:1 1 0;min-height:0;padding:22px 17px 32px;overflow-y:scroll;overflow-x:hidden;scrollbar-gutter:stable}
+ .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .layout{grid-template-columns:1fr}
+ .doclist{grid-template-columns:1fr}
+ .foot{flex:0 0 32px;height:32px;min-height:32px;max-height:32px;padding:5px 10px;font-size:.7rem}
+}
+@media(max-width:640px){
+ .app-sidebar{padding:9px 10px 8px}
+ .brand{font-size:1.0rem!important;margin-bottom:7px}
+ .nav{grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
+ .nav .tab{font-size:.78rem;padding:7px 1px;min-height:39px;white-space:nowrap!important;line-height:1.1}
+ .workspace-top{min-height:49px;max-height:49px;height:49px;flex-basis:49px;padding:5px 12px}
+ .top-heading{font-size:.88rem}
+ .pills{max-width:48%}.pills .pill:nth-child(n+2){display:none}
+ .workspace-content{padding:19px 12px 26px;scrollbar-gutter:auto}
+ .stats{gap:10px}.stat{padding:14px;min-height:124px}
+ .sectionhead h2{font-size:1.8rem}
+ .sheet{padding:17px 14px}
+ .doclist{grid-template-columns:1fr}
+ .foot{display:none}
+ #eval .table-wrap{padding:0;border:0;background:transparent}
+}
+@media(max-width:370px){.nav .tab{font-size:.71rem}.nav .tab:nth-child(5){font-size:0}.nav .tab:nth-child(5)::after{content:'操作';font-size:.76rem}}
+@media print{
+ html,body{height:auto!important;max-height:none!important;overflow:visible!important}
+ .app-frame,.app-body{display:block!important;height:auto!important;min-height:0!important;overflow:visible!important}
+ .workspace-content{height:auto!important;max-height:none!important;overflow:visible!important;padding:0}
+ .app-sidebar,.workspace-top,.foot{display:none!important}
+ .panel{page-break-before:always}
+}
+</style>
+<style id="v55-visual-polish">
+/* V5.8: readable, one-line branding and non-colliding export controls */
+@media (min-width:1181px){
+ .app-frame{grid-template-columns:310px minmax(0,1fr)}
+ .app-sidebar{width:310px;padding-left:22px;padding-right:22px}
+}
+@media (min-width:901px) and (max-width:1180px){
+ .app-frame{grid-template-columns:275px minmax(0,1fr)}
+ .app-sidebar{width:275px;padding-left:18px;padding-right:18px}
+}
+@media (min-width:901px){
+ .brand{display:flex!important;flex-flow:row nowrap!important;align-items:baseline;gap:0;white-space:nowrap!important;overflow:visible!important;max-width:100%;font-size:1.22rem!important;line-height:1.35;letter-spacing:-.01em!important}
+ .brand-main,.brand-second{display:inline!important;max-width:none!important;white-space:nowrap!important;overflow:visible!important;text-overflow:clip!important;font-size:inherit!important}
+ .brand-second{margin-left:.3em}
+ .brand-sub{margin-top:11px}
+ .nav .tab{padding-left:15px;padding-right:15px}
+}
+/* Export controls belong to a padded action surface, not to the card edges. */
+#guide .guide-export-actions{
+ display:flex;justify-content:flex-start;align-items:center;
+ gap:16px; padding:20px 22px; margin:26px 0 0;
+ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+}
+#guide .guide-export-actions .btn{flex:0 0 auto;min-height:50px;padding:12px 20px;max-width:100%;}
+/* Long labels and technical strings may wrap, but never expand the canvas. */
+.app-body,.workspace-content,.panel,.sheet,.result{min-width:0}
+@media (max-width:900px){
+ .brand{display:flex!important;flex-flow:row nowrap!important;align-items:baseline;white-space:nowrap!important;overflow:visible!important;font-size:1.07rem!important;line-height:1.2;letter-spacing:-.015em!important;gap:0}
+ .brand-main,.brand-second{display:inline!important;white-space:nowrap!important;max-width:none!important;overflow:visible!important;text-overflow:clip!important;font-size:inherit!important}
+ .brand-main::after{content:none!important}
+ .brand-second{margin-left:.32em}
+ #guide .guide-export-actions{padding:17px 18px;margin-top:22px;gap:13px;flex-wrap:wrap}
+}
+@media (max-width:640px){
+ .brand{font-size:1rem!important}
+ #guide .guide-export-actions{padding:16px;display:grid;grid-template-columns:1fr;gap:12px}
+ #guide .guide-export-actions .btn{width:100%;white-space:normal;text-align:center;min-width:0;line-height:1.4}
+}
+@media print{#guide .guide-export-actions{display:none!important}}
+</style>
+
+<style id="v55-single-line-brand">
+/* V5.8: one actual text node. Never split a single brand into flex children. */
+.app-sidebar .brand{
+  display:block!important;flex:none!important;white-space:nowrap!important;
+  overflow:visible!important;text-overflow:clip!important;word-break:normal!important;
+  overflow-wrap:normal!important;max-width:100%!important;width:max-content!important;
+  margin-inline:0!important;letter-spacing:-.02em!important;
+  font:700 19px/1.35 Georgia,'Times New Roman',serif!important;
+}
+@media(max-width:900px){.app-sidebar .brand{font-size:17px!important;line-height:1.3!important}}
+@media(max-width:370px){.app-sidebar .brand{font-size:16px!important}}
+/* Keep workspace header on one line; status badges may shrink or hide instead. */
+.workspace-top .top-heading{white-space:nowrap!important;word-break:keep-all!important}
+</style>
+<style>
+/* V5.8: Mobile-first layout corrections for real Android Chrome/content://. */
+@media screen and (max-width:900px) {
+ html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
+ body{overscroll-behavior:none;}
+ .app-frame{height:100vh;height:100svh;min-height:0;max-height:100svh;overflow:hidden;}
+ .app-sidebar{flex:0 0 auto;z-index:3;box-shadow:none;}
+ .app-body{height:auto;min-height:0;min-width:0;flex:1 1 0;overflow:hidden;}
+ .workspace-top{flex:0 0 auto;}
+ .workspace-content{scroll-behavior:auto;overflow-y:auto;overflow-x:hidden;min-height:0;min-width:0;overscroll-behavior-y:contain;overflow-anchor:none;}
+ .panel{overflow:visible;}
+ .foot{display:none!important;}
+}
+@media screen and (max-width:640px) {
+ :root{--radius:11px;}
+ .app-sidebar{padding:8px 12px 7px!important;}
+ .app-sidebar .brand{font:700 17px/1.2 Georgia,'Times New Roman',serif!important;white-space:nowrap!important;margin:0 0 7px!important;width:auto!important;max-width:100%!important;overflow:visible!important;letter-spacing:-.025em!important;}
+ .nav{display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;column-gap:6px!important;row-gap:3px!important;padding:0!important;overflow:visible!important;}
+ .nav .tab{grid-column:span 2;display:flex!important;justify-content:center;align-items:center;text-align:center!important;min-width:0!important;min-height:36px!important;padding:5px 2px!important;font-size:14px!important;line-height:1.2!important;font-weight:600;white-space:nowrap!important;border-radius:8px!important;overflow:hidden!important;}
+ .nav .tab:nth-child(4),.nav .tab:nth-child(5){grid-column:span 3;}
+ .nav .tab:nth-child(5)::after{content:none!important;}
+ .workspace-top{height:42px!important;min-height:42px!important;max-height:42px!important;flex-basis:42px!important;padding:5px 12px!important;gap:8px!important;}
+ .workspace-top>div:first-child{min-width:0!important;flex:1 1 auto!important;}
+ .top-heading{font-size:13px!important;letter-spacing:-.025em!important;white-space:nowrap!important;text-overflow:ellipsis!important;overflow:hidden!important;}
+ .top-caption{display:none!important;}
+ .pills{flex:0 0 auto!important;max-width:44%!important;min-width:0!important;overflow:hidden!important;}
+ .pills .pill{font-size:11px!important;padding:3px 7px!important;line-height:1.4!important;}
+ .pills .pill:nth-child(n+2){display:none!important;}
+ .workspace-content{padding:14px 12px max(24px,env(safe-area-inset-bottom))!important;font-size:15px!important;line-height:1.58!important;}
+ .sectionhead{padding:0 0 12px!important;margin:0 0 14px!important;}
+ .eyebrow{font-size:10px!important;letter-spacing:.09em!important;margin:0 0 5px!important;}
+ .sectionhead h2{font-size:26px!important;line-height:1.27!important;margin:0 0 7px!important;}
+ .sectionhead .desc,.desc{font-size:14px!important;line-height:1.58!important;}
+ .sectionhead .desc + .desc{margin-top:6px!important;}
+ .status-explainer{font-size:12px!important;margin-top:8px!important;}
+ .stats{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important;margin-bottom:12px!important;}
+ .stat{min-height:102px!important;padding:13px 12px 12px!important;}
+ .stat label{font-size:13px!important;line-height:1.45!important;}
+ .stat b{font-size:27px!important;margin:5px 0!important;}
+ .stat small{font-size:12px!important;line-height:1.4!important;}
+ .layout{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:12px!important;}
+ .sheet{padding:15px 13px!important;min-width:0!important;}
+ .sheet h3{font-size:17px!important;margin:0 0 10px!important;}
+ .sheet p{font-size:14px!important;line-height:1.6!important;margin-bottom:10px!important;}
+ .steps{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:11px!important;margin:12px 0 16px!important;}
+ .step{font-size:13px!important;line-height:1.45!important;padding-top:7px!important;}
+ .step b{font-size:11px!important;}
+ .notice{padding:12px 13px!important;font-size:13px!important;line-height:1.55!important;}
+ .formrow{display:flex!important;flex-direction:column!important;gap:8px!important;}
+ .search{font-size:16px!important;min-height:45px!important;padding:9px 12px!important;}
+ .btn{font-size:14px!important;min-height:44px!important;padding:10px 12px!important;border-radius:8px!important;}
+ .formrow>.btn{width:100%!important;}
+ .suggestions{gap:7px!important;margin:10px 0 12px!important;}
+ .suggestions button{font-size:13px!important;padding:7px 10px!important;line-height:1.4!important;min-height:36px!important;}
+ .response{padding-top:13px!important;}
+ .response h3{font-size:16px!important;}
+ #answer,.doclist{grid-template-columns:minmax(0,1fr)!important;gap:10px!important;}
+ .result{padding:13px 14px!important;min-width:0!important;}
+ .doclist .result{min-height:auto!important;}
+ .result h4{font-size:15px!important;margin:2px 0 6px!important;}
+ .result p{font-size:14px!important;line-height:1.55!important;margin:6px 0!important;}
+ .result a{font-size:14px!important;}
+ .mono{font-size:11.5px!important;line-height:1.55!important;overflow-wrap:anywhere!important;word-break:break-word!important;}
+ .smallcaps{font-size:11px!important;}
+ .toolbar{display:flex!important;flex-wrap:wrap!important;gap:9px!important;margin-bottom:12px!important;}
+ .toolbar>div:last-child{gap:8px!important;}
+ .toolbar select{font-size:14px!important;min-height:40px!important;padding:6px 10px!important;}
+ #guide .guide-export-actions{padding:13px!important;margin-top:15px!important;gap:10px!important;}
+ #eval .table-wrap{overflow:visible!important;}
+ #eval table{font-size:14px!important;}
+ #eval tr{padding:11px 12px!important;}
+ #eval td{grid-template-columns:minmax(65px,25%) minmax(0,1fr)!important;gap:8px!important;padding:5px 0!important;font-size:13px!important;line-height:1.45!important;}
+ #eval td::before{font-size:12px!important;}
+ #eval .tag{font-size:12px!important;}
+ details{padding:12px 14px!important;font-size:14px!important;}
+ .placeholder{padding:15px 8px!important;font-size:13px!important;}
+}
+@media screen and (max-width:359px) {
+ .app-sidebar .brand{font-size:16px!important;}
+ .nav .tab{font-size:12.5px!important;min-height:35px!important;}
+ .top-heading{font-size:12px!important;}
+ .pills .pill{font-size:10px!important;}
+ .sectionhead h2{font-size:24px!important;}
+ .workspace-content{padding-inline:10px!important;}
+}
+</style>
+
+<style id="v57-mobile-reading-polish">
+/* V5.8: refinements based on 21 actual Android Chrome screenshots. */
+@media screen and (max-width:640px){
+ .app-sidebar{padding-top:7px!important;padding-bottom:7px!important}
+ .app-sidebar .brand{margin-bottom:5px!important;font-size:16px!important}
+ .nav{column-gap:7px!important;row-gap:2px!important}
+ .nav .tab{min-height:34px!important;font-size:13.5px!important;padding:5px 3px!important}
+ .workspace-content{padding-bottom:max(32px,env(safe-area-inset-bottom))!important}
+ .sectionhead h2{font-size:clamp(23px,6.4vw,27px)!important;line-height:1.3!important}
+ .sectionhead .desc{font-size:14px!important;line-height:1.62!important}
+ .result{padding:15px!important}
+ .result .mono{font-size:11.5px!important;line-height:1.62!important;overflow-wrap:anywhere!important}
+ #eval td{grid-template-columns:minmax(66px,25%) minmax(0,1fr)!important;align-items:start!important}
+ #eval td:nth-child(2){overflow-wrap:anywhere!important;word-break:break-word!important}
+ .toolbar{align-items:stretch!important}
+ .toolbar>div:last-child{flex-wrap:wrap!important}
+ .cli-block{font-size:12px!important;padding:12px 14px!important}
+}
+.cli-block{background:#f7f4ed;border:1px solid var(--line);border-radius:8px;margin:0 0 12px;padding:14px 16px;max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;font:400 .88rem/1.6 ui-monospace,'Cascadia Code',Consolas,monospace;white-space:pre}
+.cli-block code{white-space:pre;word-break:normal;overflow-wrap:normal}
+.source-more{display:none;margin:20px auto 10px;padding:12px 20px;min-height:45px;border:1px solid var(--accent);background:var(--surface);color:var(--accent-dark);border-radius:9px;font-weight:650}
+@media screen and (max-width:640px){.source-more:not([hidden]){display:block}}
+@media print{.source-more{display:none!important}}
+</style>
+
+<style id="v58-mobile-usability">
+/* V5.8: 20 actual Android captures, preserve desktop dimensions & behavior. */
+@media screen and (max-width:640px){
+ .workspace-content{padding-bottom:calc(50px + env(safe-area-inset-bottom))!important}
+ .app-sidebar{padding-inline:12px!important}
+ .app-sidebar .brand{font-size:clamp(15px,4.2vw,17px)!important;letter-spacing:0!important}
+ .nav{gap:3px 5px!important}
+ .nav .tab{min-height:40px!important;font-size:clamp(12.5px,3.55vw,14.5px)!important;padding:7px 2px!important;line-height:1.25!important}
+ .workspace-top{padding:8px 14px!important}
+ .top-heading{font-size:.9rem!important}
+ .pills .pill{font-size:.73rem!important;padding:3px 8px!important}
+ #eval td{grid-template-columns:minmax(60px,23%) minmax(0,1fr)!important}
+ #eval td{min-width:0!important}
+ #eval td:nth-child(2),#eval td:nth-child(3){overflow-wrap:anywhere!important;word-break:break-word!important}
+ .toolbar{gap:8px!important}
+ .toolbar>div:last-child{display:flex!important;width:100%;gap:10px!important;justify-content:stretch!important}
+ .toolbar select,.toolbar .btn{flex:1 1 0!important;min-width:0!important;white-space:normal!important;text-align:center!important;padding:9px 7px!important}
+ .cli-unit{margin-bottom:15px}
+ .cli-block{margin-bottom:0!important;scrollbar-width:thin}
+ .cli-copy{min-height:38px}
+}
+.cli-unit{border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--surface);margin-bottom:14px}
+.cli-unit-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 11px;color:var(--muted);font-size:.81rem}
+.cli-copy{border:1px solid var(--line);background:var(--surface);border-radius:7px;color:var(--accent-dark);font-size:.83rem;font-weight:650;padding:6px 12px;min-width:96px}
+.cli-unit .cli-block{border:0;border-top:1px solid var(--line);border-radius:0;margin:0!important}
+.quick-presentation{display:inline-block;margin:7px 0 12px;font-weight:650}
+@media print{.cli-copy{display:none!important}}
+</style>
+</head><body>
+<script id="payload" type="application/json">{"version":"5.8","mode":"DEMO","generated_at":"2026-11-09T19:21:33+08:00","evidence_id":"ac241e37851c656cbbfd","source_integrity_verified":true,"dataset_url":"https://data.gov.tw/dataset/137993","window":{"first_day":"2026-10-26","previous_end":"2026-11-01","recent_start":"2026-11-02","last_day":"2026-11-08","label":"最近有資料之 14 天（不保證是今天前 14 天）"},"docs_count":29,"chunks_count":29,"public_chunks_count":27,"method":"hash-tfidf","model_used":false,"disclaimer":"DEMO 不是官方統計；HTML 僅含公開可見文件。無 LLM；權限角色只能由經認證後端可信設定。","metrics":{"previous_slot_coverage_pct":95.24,"recent_slot_coverage_pct":90.48,"previous_usable_coverage_pct":95.24,"recent_usable_coverage_pct":90.48,"expected_slots_per_week":21,"previous_slots":20,"recent_slots":19,"comparable_slot_count":18,"matched_station_observations":143,"avg_bikes_change":-1.112,"previous_zero_pct_matched":9.09,"recent_zero_pct_matched":16.08,"recent_zero_change_points":6.99,"selected_snapshot_count":39,"source_changed_count":0,"source_missing_count":0},"quality":{"rows_in_window":312,"eligible_rows":310,"stale_rows":1,"inactive_rows":1,"unknown_status_rows":0,"future_rows":0,"invalid_raw_rows":0,"duplicates_raw_rows":0,"source_file_missing":0,"source_file_changed":0},"evaluation":{"total":6,"passed":6,"rows":[{"question":"近週擷取時段完整率是多少","expect":"metric:recent_slot_coverage_pct","role":"PUBLIC","status":"EVIDENCE_FOUND","passed":true,"hit_ids":["metric:recent_slot_coverage_pct","metric:previous_slot_coverage_pct","metric:recent_slots","metric:previous_slots"]},{"question":"前週擷取時段完整率是多少","expect":"metric:previous_slot_coverage_pct","role":"PUBLIC","status":"EVIDENCE_FOUND","passed":true,"hit_ids":["metric:previous_slot_coverage_pct","metric:recent_slot_coverage_pct","metric:previous_slots","metric:recent_slots"]},{"question":"可比較時段數是多少","expect":"metric:comparable_slot_count","role":"PUBLIC","status":"EVIDENCE_FOUND","passed":true,"hit_ids":["metric:comparable_slot_count","district:松山區","metric:expected_slots_per_week","limitation:0"]},{"question":"近週零車觀測比率是多少","expect":"metric:recent_zero_pct_matched","role":"PUBLIC","status":"EVIDENCE_FOUND","passed":true,"hit_ids":["district:松山區","metric:recent_zero_pct_matched","metric:previous_zero_pct_matched","district:信義區"]},{"question":"實際租借次數是多少","expect":"NO_EVIDENCE","role":"PUBLIC","status":"NO_EVIDENCE","passed":true,"hit_ids":[]},{"question":"調度績效有沒有提高","expect":"NO_EVIDENCE","role":"PUBLIC","status":"NO_EVIDENCE","passed":true,"hit_ids":[]}],"note":"命中／拒答測試是以人工指定的期望值驗證；不代表生成內容的真實性或模型的全面準確率。"},"public_chunks":[{"id":"metric:previous_slot_coverage_pct","title":"前週擷取時段完整率","category":"統計","evidence_id":"ac241e37851c656cbbfd","source_url":"https://data.gov.tw/dataset/137993","source_note":"本機來源 SHA-256 已核對","data_origin":"自製模擬數據，官方網址僅供欄位參考","scope":"PUBLIC","chunk_id":"CH-1223901613390601","text":"研究期間 2026-10-26 至 2026-11-08；前週擷取時段完整率：95.24 %。","start":0,"end":47,"sha256":"4d706d859916ed991802445c8ba1e70b0f52848477b8bc8eb0befefc596901b6"},{"id":"metric:recent_slot_coverage_pct","title":"近週擷取時段完整率","category":"統計","evidence_id":"ac241e37851c656cbbfd","source_url":"https://data.gov.tw/dataset/137993","source_note":"本機來源 SHA-256 已核對","data_origin":"自製模擬數據，官方網址僅供欄位參考","scope":"PUBLIC","chunk_id":"CH-9E9F082A827A342F","text":"研究期間 2026-10-26 至 2026-11-08；近週擷取時段完整率：90.48 %。","start":0,"end":47,"sha256":"7f05b98e208c138accf89234aad73807e08227ec2290373e143540b3845c0103"},{"id":"metric:previous_usable_coverage_pct","title":"前週有效時段覆蓋率","category":"統計","evidence_id":"ac241e37851c656cbbfd","source_url":"https://data.gov.tw/dataset/137993","source_note":"本機來源 SHA-256 已核對","data_origin":"自製模擬數據，官方網址僅供欄位參考","scope":"PUBLIC","chunk_id":"CH-B2B2B27FA25E6327","text":"研究期間 2026-10-26 至 2026-11-08；前週有效時段覆蓋率：95.24 %。","start":0,"end":47,"sha256":"0899390c2b9c2bd5085a6b56439e6cfedb01ddad0c2fc5365e10c1c5881b6d56"},{"id":"metric:recent_usable_coverage_pct","title":"近週有效時段覆蓋率","category":"統計","evidence_id":"ac241e37851c656cbbfd","source_url":"https://data.gov.tw/dataset/137993","source_note":"本機來源 SHA-256 已核對","data_origin":"自製模擬數據，官方網址僅供欄位參考","scope":"PUBLIC","chunk_id":"CH-C18FD4DC2DFBD35B","text":"研究期間 2026-10-26 至 2026-11-08；近週有效時段覆蓋率：90.48 %。","start":0,"end":47,"sha256":"d8a15d15ebcb04e3987193a68aa9b9614184f2b2117f855b702a52813206d55e"},{"id":"metric:expected_slots_per_week","title":"每週預期時段數","category":"統計","evidence_id":"ac241e37851c656cbbfd","source_url":"https://data.gov.tw/dataset/137993","source_note":"本機來源 SHA-256 已核對","data_origin":"自製模擬數據，官方網址僅供欄位參考","scope":"PUBLIC","chunk_id":"CH-2D490D1BC84F75A1","text":"研究期間 2026-10-26 至 2026-11-08；每週預期時段數：21 筆／時段。","start":0,"end":45,"sha256":"2f9e6cbd314ba43e93267c5c80552badc9c337756c1f528015c09bc500200493"},{"id":"metric:previous_slots","title":"前週已擷取時段","category":"統計","evidence_id":"ac241e37851c656cbbfd","source_url":"https://data.gov.tw/dataset/137993","source_note":"本機來源 SHA-256 已核對","data_origin":"自製模擬數據，官方網址僅供欄位參考","scope":"PUBLIC","chunk_id":"CH-FFCEFCFEB4EE054A","text":"研究期間 2026-10-26 至 2026-11-08；前週已擷取時段：20 筆／時段。","start":0,"end":45,"sha256":"e6ffe8adcb8b532e10be26a21f377699b21a88851de7bda14bc5192e7c1fcf0c"},{"id":"metric:recent_slots","title":"近週已擷取時段","category":"統計","evidence_id":"ac241e37851c656cbbfd","source_url":"https://data.gov.tw/dataset/137993","source_note":"本機來源 SHA-256 已核對","data_origin":"自製模擬數據，官方網址僅供欄位參考","scope":"PUBLIC","chunk_id":"CH-F5F9AC0C66701309","text":"研究期間 2026-10-26 至 2026-11-08；近週已擷取時段：19 筆／時段。","start":0,"end":45,"sha256":"f3e1e2ff7bed93ec6c6678da5ae3c5b589acaa14429ddf632bb8362011a8b320"},{"id":"metric:comparable_slot_count","title":"可比較時段數","category":"統計","evidence_id":"ac241e37851c656cbbfd","source_url":"https://data.gov.tw/dataset/137993","source_note":"本機來源 SHA-256 已核對","data_origin":"自製模擬數據，官方網址僅供欄位參考","scope":"PUBLIC","chunk_id":"CH-55F323AF2BA2CF45","text":"研究期間 2026-10-26 至 2026-11-08；可比較時段數：18 筆／時段。","start":0,"end":44,"sha256":"f47863a8074daf17c95c93e75801475bda695351a2362913032689431bc5034d"},{"id":"metric:matched_station_observations","title":"同站同時段配對筆數","category":"統計","evidence_id":"ac241e37851c656cbbfd","source_url":"https://data.gov.tw/dataset/137993","source_note":"本機來源 SHA-256 已核對","data_origin":"自製模擬數據，官方網址僅供欄位參考","scope":"PUBLIC","chunk_id":"CH-734714FB4E0FA2E9","text":"研究期間 2026-10-26 至 2026-11-08；同站同時段配對筆數：143 筆／時段。","start":0,"end":48,"sha256":"effcdbe4d26499949c09a2d8c8a7ffc0a8ee30066427c4656196bc4b2a4d6f7c"},{"id":"metric:avg_bikes_change","title":"平均可借車數跨週差值","category":"統計","evidence_id":"ac241e37851c656cbbfd","source_url":"https://data.gov.tw/dataset/137993","source_note":"本機來源 SHA-256 已核對","data_origin":"自製模擬數據，官方網址僅供欄位參考","scope":"PUBLIC","chunk_id":"CH-E8B5C81FBCC81967","text":"研究期間 2026-10-26 至 2026-11-08；平均可借車數跨週差值：-1.112 輛。 這是可借車的抽樣觀測，不是實際租借交易量或需求。","start":0,"end":74,"sha256":"5f6bf312341f837cf50ff506b339c33e27be374e49b238fd9ea5bd70c8875650"},{"id":"metric:previous_zero_pct_matched","title":"前週零車觀測比率","category":"統計","evidence_id":"ac241e37851c656cbbfd","source_url":"https://data.gov.tw/dataset/137993","source_note":"本機來源 SHA-256 已核對","data_origin":"自製模擬數據，官方網址僅供欄位參考","scope":"PUBLIC","chunk_id":"CH-E4D7BD01E4A5D5F7","text":"研究期間 2026-10-26 至 2026-11-08；前週零車觀測比率：9.09 筆／時段。 這是可借車的抽樣觀測，不是實際租借交易量或需求。","start":0,"end":73,"sha256":"dd9b5c85141ea47eccbc9a0504ea3c137c1d6ff82a2b677a16f10f21fbc4a097"},{"id":"metric:recent_zero_pct_matched","title":"近週零車觀測比率","category":"統計","evidence_id":"ac241e37851c656cbbfd","source_url":"https://data.gov.tw/dataset/137993","source_note":"本機來源 SHA-256 已核對","data_origin":"自製模擬數據，官方網址僅供欄位參考","scope":"PUBLIC","chunk_id":"CH-0C3FBFE3C8E6388F","text":"研究期間 2026-10-26 至 2026-11-08；近週零車觀測比率：16.08 筆／時段。 這是可借車的抽樣觀測，不是實際租借交易量或需求。","start":0,"end":74,"sha256":"2262dafc46d32036cd66f9e2863bb4592104ea9cabcda5442cac647e6da6a1ce"},{"id":"metric:recent_zero_change_points","title":"零車觀測比率變化百分點","category":"統計","evidence_id":"ac241e37851c656cbbfd","source_url":"https://data.gov.tw/dataset/137993","source_note":"本機來源 SHA-256 已核對","data_origin":"自製模擬數據，官方網址僅供欄位參考","scope":"PUBLIC","chunk_id":"CH-6378942E3E4D99C5","text":"研究期間 2026-10-26 至 2026-11-08；零車觀測比率變化百分點：6.99 %。","start":0,"end":48,"sha256":"2e335560f82302a7b4f6579398712bf6f1430fc8690b1f120fa9d7bed9d3a05f"},{"id":"metric:selected_snapshot_count","title":"選取快照數","category":"統計","evidence_id":"ac241e37851c656cbbfd","source_url":"https://data.gov.tw/dataset/137993","source_note":"本機來源 SHA-256 已核對","data_origin":"自製模擬數據，官方網址僅供欄位參考","scope":"PUBLIC","chunk_id":"CH-69CA8E253DA4BA03","text":"研究期間 2026-10-26 至 2026-11-08；選取快照數：39 筆／時段。","start":0,"end":43,"sha256":"0149be90b3263da64dae72dc065cf4ad50fe0313877d0e93ddd2f49ce8d16269"},{"id":"metric:source_changed_count","title":"來源檔案變更數","category":"統計","evidence_id":"ac241e37851c656cbbfd","source_url":"https://data.gov.tw/dataset/137993","source_note":"本機來源 SHA-256 已核對","data_origin":"自製模擬數據，官方網址僅供欄位參考","scope":"PUBLIC","chunk_id":"CH-A979CB7F6115BDF7","text":"研究期間 2026-10-26 至 2026-11-08；來源檔案變更數：0 筆／時段。","start":0,"end":44,"sha256":"23ed480157b0f988d69c03e125d3bfabd1e41c70d71ce554896822ab68b5d0dd"},{"id":"metric:source_missing_count","title":"來源檔案缺漏數","category":"統計","evidence_id":"ac241e37851c656cbbfd","source_url":"https://data.gov.tw/dataset/137993","source_note":"本機來源 SHA-256 已核對","data_origin":"自製模擬數據，官方網址僅供欄位參考","scope":"PUBLIC","chunk_id":"CH-5CDBC1C01524C265","text":"研究期間 2026-10-26 至 2026-11-08；來源檔案缺漏數：0 筆／時段。","start":0,"end":44,"sha256":"3f26b32b0b5eed2535c802d658adab4a78fdddad44471fbbb50f5399c1899403"},{"id":"district:中正區","title":"中正區 同站跨週比較","category":"統計","evidence_id":"ac241e37851c656cbbfd","source_url":"https://data.gov.tw/dataset/137993","source_note":"本機來源 SHA-256 已核對","data_origin":"自製模擬數據，官方網址僅供欄位參考","scope":"PUBLIC","chunk_id":"CH-B1D4BD307AE8F5C1","text":"中正區：配對 36 筆、平均可借車差值 -1.11 輛、近週零車觀測比率 11.11%。","start":0,"end":44,"sha256":"fc75502943b6de7ef672b48b75acff4c4ffba30f727ab59be7b01cc3581c4a8c"},{"id":"district:信義區","title":"信義區 同站跨週比較","category":"統計","evidence_id":"ac241e37851c656cbbfd","source_url":"https://data.gov.tw/dataset/137993","source_note":"本機來源 SHA-256 已核對","data_origin":"自製模擬數據，官方網址僅供欄位參考","scope":"PUBLIC","chunk_id":"CH-EDF7AF647AC1FA07","text":"信義區：配對 36 筆、平均可借車差值 -1.89 輛、近週零車觀測比率 19.44%。","start":0,"end":44,"sha256":"bc074f142646f54b7a1d056e76c5a6ffdee846f7258ea0e0504a733400eb4546"},{"id":"district:大安區","title":"大安區 同站跨週比較","category":"統計","evidence_id":"ac241e37851c656cbbfd","source_url":"https://data.gov.tw/dataset/137993","source_note":"本機來源 SHA-256 已核對","data_origin":"自製模擬數據，官方網址僅供欄位參考","scope":"PUBLIC","chunk_id":"CH-90A6EDAA4DE9878E","text":"大安區：配對 36 筆、平均可借車差值 -2.44 輛、近週零車觀測比率 16.67%。","start":0,"end":44,"sha256":"94d9cdb88fcc97fd78d87e88cf3f98ed51e29ff13d00108a35fd26dc494b98ab"},{"id":"district:松山區","title":"松山區 同站跨週比較","category":"統計","evidence_id":"ac241e37851c656cbbfd","source_url":"https://data.gov.tw/dataset/137993","source_note":"本機來源 SHA-256 已核對","data_origin":"自製模擬數據，官方網址僅供欄位參考","scope":"PUBLIC","chunk_id":"CH-9BE7ADFB989139E3","text":"松山區：配對 35 筆、平均可借車差值 1.06 輛、近週零車觀測比率 17.14%。","start":0,"end":43,"sha256":"ca85786d4c2a0b304eefb962ba6b9a619e788469c71955d015a7811b2c1c37bd"},{"id":"limitation:0","title":"研究方法與限制 1","category":"方法","evidence_id":"ac241e37851c656cbbfd","source_url":"https://data.gov.tw/dataset/137993","source_note":"本機來源 SHA-256 已核對","data_origin":"自製模擬數據，官方網址僅供欄位參考","scope":"PUBLIC","chunk_id":"CH-A9E0375BABE31190","text":"只比較相隔七日、相同星期幾及相同時段的同一站點；不完整時段不補值。","start":0,"end":33,"sha256":"8a82dc06c65e4aa6292c0fb4bea03db25177ca9ae8e0c2f1a4c709856ef65d45"},{"id":"limitation:1","title":"研究方法與限制 2","category":"方法","evidence_id":"ac241e37851c656cbbfd","source_url":"https://data.gov.tw/dataset/137993","source_note":"本機來源 SHA-256 已核對","data_origin":"自製模擬數據，官方網址僅供欄位參考","scope":"PUBLIC","chunk_id":"CH-56D6DB669D112C68","text":"每個站點每個時間點被視為一筆觀測，密集擷取時可能使部分時段權重較大。","start":0,"end":34,"sha256":"f0ed14ce438bce5f74d33e03606f045aa45d217c4006a1ce314d0b98838a0885"},{"id":"limitation:2","title":"研究方法與限制 3","category":"方法","evidence_id":"ac241e37851c656cbbfd","source_url":"https://data.gov.tw/dataset/137993","source_note":"本機來源 SHA-256 已核對","data_origin":"自製模擬數據，官方網址僅供欄位參考","scope":"PUBLIC","chunk_id":"CH-DFDBA895D7DC881B","text":"零車、平均可借車數不是實際租借交易量、需求或調度績效。","start":0,"end":27,"sha256":"3e8815cb2dda535e7b2422de3f96908477e13d2d345e4bd5a96355be353329de"},{"id":"limitation:3","title":"研究方法與限制 4","category":"方法","evidence_id":"ac241e37851c656cbbfd","source_url":"https://data.gov.tw/dataset/137993","source_note":"本機來源 SHA-256 已核對","data_origin":"自製模擬數據，官方網址僅供欄位參考","scope":"PUBLIC","chunk_id":"CH-1B1475441690E924","text":"門檻是本專案自行設定的分析規則，並非官方 SLA、KPI 或政策標準。","start":0,"end":35,"sha256":"d77b9663c3f1fba67f1068d8407a38e61266c706e2060cb91b542950dd64c8ba"},{"id":"limitation:4","title":"研究方法與限制 5","category":"方法","evidence_id":"ac241e37851c656cbbfd","source_url":"https://data.gov.tw/dataset/137993","source_note":"本機來源 SHA-256 已核對","data_origin":"自製模擬數據，官方網址僅供欄位參考","scope":"PUBLIC","chunk_id":"CH-E3D20634A9AE14FF","text":"來源雜湊只用來查核本機檔案是否變動；不構成官方資料簽章或真偽認證。","start":0,"end":33,"sha256":"0ad15e1a4d0d03111686d8efedde97a228113ce398cfb8d37b4aeee4a1f7aeee"},{"id":"limitation:5","title":"研究方法與限制 6","category":"方法","evidence_id":"ac241e37851c656cbbfd","source_url":"https://data.gov.tw/dataset/137993","source_note":"本機來源 SHA-256 已核對","data_origin":"自製模擬數據，官方網址僅供欄位參考","scope":"PUBLIC","chunk_id":"CH-6DB013CB3E7BB07F","text":"即使通過最低完整率與配對數門檻，仍須人工解釋季節、氣候、站點變更及其他外生因素。","start":0,"end":40,"sha256":"f801280f4e0403a862230c06dadd742ad0341c6f46060fcb40a954a9fd952ca9"},{"id":"source:official","title":"原始資料來源與授權","category":"來源","evidence_id":"ac241e37851c656cbbfd","source_url":"https://data.gov.tw/dataset/137993","source_note":"本機來源 SHA-256 已核對","data_origin":"自製模擬數據，官方網址僅供欄位參考","scope":"PUBLIC","chunk_id":"CH-F2C5D8F7EE2FCD6E","text":"資料由臺北市政府交通局提供；YouBike2.0臺北市公共自行車即時資訊；官方標示每分鐘更新；依政府資料開放授權條款－第 1 版使用與顯名。","start":0,"end":70,"sha256":"330affdddb0a3120a34c3f2a0b51a318efef23c3821aa286a10c5c193b8ae807"}],"index":{"method":"hash-tfidf","dimension":512,"idf":{"395":2.1349799328389842,"241":3.2335922215070942,"288":2.540445040947149,"49":2.540445040947149,"400":1.4989911661189879,"340":2.9459101490553135,"333":2.7227665977411037,"428":2.7227665977411037,"47":1.1967102942460544,"482":1.4989911661189879,"391":1.4989911661189879,"403":1.241162056816888,"68":1.4989911661189879,"89":1.4989911661189879,"258":1.1967102942460544,"471":1.3877655310087635,"437":1.4989911661189879,"19":3.2335922215070942,"307":2.0296194171811583,"55":2.1349799328389842,"204":3.2335922215070942,"321":2.7227665977411037,"271":2.1349799328389842,"4":2.9459101490553135,"495":2.9459101490553135,"310":2.252762968495368,"503":3.2335922215070942,"29":3.2335922215070942,"484":3.6390573296152584,"240":3.2335922215070942,"260":3.6390573296152584,"504":2.9459101490553135,"492":3.6390573296152584,"57":1.6241543090729937,"170":3.2335922215070942,"70":2.9459101490553135,"383":2.7227665977411037,"319":2.386294361119891,"254":2.7227665977411037,"320":2.386294361119891,"208":3.2335922215070942,"200":3.6390573296152584,"167":3.2335922215070942,"186":3.6390573296152584,"339":3.6390573296152584,"145":2.540445040947149,"31":2.386294361119891,"491":2.386294361119891,"236":2.1349799328389842,"189":3.6390573296152584,"18":2.540445040947149,"246":3.6390573296152584,"247":2.386294361119891,"284":2.386294361119891,"378":2.540445040947149,"161":2.9459101490553135,"163":2.9459101490553135,"347":2.7227665977411037,"426":2.7227665977411037,"150":2.9459101490553135,"393":1.8472978603872037,"469":2.252762968495368,"424":2.7227665977411037,"422":2.7227665977411037,"355":2.7227665977411037,"318":2.7227665977411037,"224":2.7227665977411037,"215":2.7227665977411037,"376":2.7227665977411037,"139":2.7227665977411037,"103":2.540445040947149,"350":2.386294361119891,"313":2.0296194171811583,"359":2.1349799328389842,"205":2.1349799328389842,"12":2.252762968495368,"436":3.6390573296152584,"34":3.6390573296152584,"286":2.9459101490553135,"273":3.6390573296152584,"245":2.7227665977411037,"293":3.6390573296152584,"101":3.6390573296152584,"131":3.2335922215070942,"294":3.6390573296152584,"375":3.2335922215070942,"90":3.6390573296152584,"417":3.6390573296152584,"459":2.540445040947149,"401":2.9459101490553135,"455":3.6390573296152584,"11":2.9459101490553135,"65":3.2335922215070942,"175":2.9459101490553135,"439":3.6390573296152584,"242":3.2335922215070942,"86":3.6390573296152584,"180":2.7227665977411037,"216":2.540445040947149,"156":2.9459101490553135,"9":2.7227665977411037,"223":3.6390573296152584,"346":3.6390573296152584,"93":3.6390573296152584,"26":3.6390573296152584,"304":3.2335922215070942,"276":3.6390573296152584,"341":3.6390573296152584,"219":3.6390573296152584,"177":3.2335922215070942,"336":2.386294361119891,"149":2.386294361119891,"59":2.386294361119891,"382":3.6390573296152584,"105":2.7227665977411037,"384":3.6390573296152584,"501":3.6390573296152584,"81":3.2335922215070942,"412":3.6390573296152584,"35":3.6390573296152584,"305":3.6390573296152584,"511":3.6390573296152584,"444":3.2335922215070942,"141":3.2335922215070942,"369":3.6390573296152584,"178":3.6390573296152584,"60":3.6390573296152584,"51":3.6390573296152584,"332":3.6390573296152584,"37":3.6390573296152584,"202":3.6390573296152584,"408":3.2335922215070942,"162":3.2335922215070942,"244":3.6390573296152584,"489":2.9459101490553135,"279":3.6390573296152584,"27":3.6390573296152584,"251":3.6390573296152584,"493":3.6390573296152584,"458":3.6390573296152584,"222":3.6390573296152584,"345":3.6390573296152584,"466":3.6390573296152584,"3":3.6390573296152584,"353":3.6390573296152584,"174":3.6390573296152584,"257":3.6390573296152584,"143":3.6390573296152584,"66":3.6390573296152584,"62":3.6390573296152584,"290":3.6390573296152584,"421":3.6390573296152584,"75":3.2335922215070942,"99":3.6390573296152584,"172":3.2335922215070942,"303":3.6390573296152584,"374":3.6390573296152584,"249":3.6390573296152584,"109":3.2335922215070942,"419":3.2335922215070942,"6":3.6390573296152584,"299":3.6390573296152584,"207":3.6390573296152584,"331":3.6390573296152584,"192":3.6390573296152584,"443":3.6390573296152584,"5":3.6390573296152584,"475":3.6390573296152584,"122":2.9459101490553135,"261":3.2335922215070942,"8":3.2335922215070942,"102":3.6390573296152584,"195":3.6390573296152584,"335":3.6390573296152584,"67":3.6390573296152584,"404":3.6390573296152584,"136":3.6390573296152584,"113":3.6390573296152584,"252":3.2335922215070942,"142":3.6390573296152584,"488":3.6390573296152584,"297":3.6390573296152584,"24":3.6390573296152584,"238":3.6390573296152584,"373":3.6390573296152584,"429":3.2335922215070942,"203":3.2335922215070942,"280":3.2335922215070942,"425":3.6390573296152584,"63":3.6390573296152584,"451":3.6390573296152584,"327":3.6390573296152584,"377":3.6390573296152584,"259":3.6390573296152584,"480":3.6390573296152584,"432":3.6390573296152584,"470":3.6390573296152584,"337":3.6390573296152584,"497":3.2335922215070942,"461":3.6390573296152584,"2":3.6390573296152584,"330":3.6390573296152584,"255":3.6390573296152584,"183":3.6390573296152584,"22":3.6390573296152584,"7":3.6390573296152584,"274":3.6390573296152584,"334":3.6390573296152584,"270":3.6390573296152584,"342":3.6390573296152584,"267":3.6390573296152584,"311":3.6390573296152584,"130":3.6390573296152584,"179":3.6390573296152584,"64":3.6390573296152584,"230":3.6390573296152584,"324":3.6390573296152584,"298":3.6390573296152584,"262":3.6390573296152584,"168":3.6390573296152584,"277":3.6390573296152584,"448":3.6390573296152584,"48":3.6390573296152584,"43":3.6390573296152584,"361":3.6390573296152584},"vectors":[{"395":0.263019087,"241":0.398362748,"288":0.312970405,"49":0.312970405,"400":0.184668381,"340":0.362921723,"333":0.335431529,"428":0.335431529,"47":0.087073857,"482":0.109068121,"391":0.109068121,"403":0.152905096,"68":0.109068121,"89":0.109068121,"258":0.087073857,"471":0.10097523,"437":0.109068121,"19":0.235279456,"307":0.147677171},{"55":0.260755191,"241":0.394933902,"288":0.310276561,"49":0.310276561,"400":0.183078877,"340":0.359797931,"333":0.332544355,"428":0.332544355,"47":0.086324382,"482":0.108129334,"391":0.108129334,"403":0.151588989,"68":0.108129334,"89":0.108129334,"258":0.086324382,"471":0.100106102,"437":0.108129334,"204":0.233254325,"321":0.196406053},{"395":0.27763546,"271":0.27763546,"4":0.383089839,"495":0.383089839,"400":0.194930686,"482":0.24161156,"310":0.292952113,"503":0.420500376,"47":0.091912685,"391":0.115129203,"403":0.161402266,"68":0.115129203,"89":0.115129203,"258":0.091912685,"471":0.106586579,"437":0.115129203,"19":0.248354296,"307":0.155883818},{"55":0.274976687,"271":0.274976687,"4":0.379421183,"495":0.379421183,"400":0.193063934,"482":0.239297769,"310":0.29014666,"503":0.416473458,"47":0.091032484,"391":0.114026669,"403":0.159856598,"68":0.114026669,"89":0.114026669,"258":0.091032484,"471":0.105565853,"437":0.114026669,"204":0.245975933,"321":0.207117969},{"29":0.380559182,"484":0.428278084,"240":0.380559182,"260":0.428278084,"400":0.218662106,"504":0.346702083,"47":0.083182366,"482":0.104193665,"391":0.104193665,"403":0.146071485,"68":0.104193665,"89":0.104193665,"258":0.083182366,"471":0.096462461,"437":0.104193665,"492":0.252947936,"57":0.112893654},{"395":0.299872682,"170":0.454180368,"70":0.413773434,"288":0.356823058,"49":0.356823058,"400":0.260963447,"47":0.099274434,"482":0.124350481,"391":0.124350481,"403":0.174329786,"68":0.124350481,"89":0.124350481,"258":0.099274434,"471":0.115123634,"437":0.124350481,"383":0.225870134,"57":0.134733529},{"55":0.301662333,"170":0.456890933,"70":0.416242849,"288":0.358952591,"49":0.358952591,"400":0.262520886,"47":0.099866908,"482":0.125092609,"391":0.125092609,"403":0.175370193,"68":0.125092609,"89":0.125092609,"258":0.099866908,"471":0.115810696,"437":0.125092609,"319":0.199139124,"57":0.135537623},{"254":0.400013414,"320":0.350580823,"208":0.475061015,"400":0.272961071,"504":0.432796398,"47":0.103838512,"482":0.130067413,"391":0.130067413,"403":0.182344484,"68":0.130067413,"89":0.130067413,"258":0.103838512,"471":0.120416368,"437":0.130067413,"428":0.236254366,"57":0.140927815},{"310":0.254863761,"200":0.411700587,"395":0.241538512,"400":0.210198282,"167":0.365828756,"271":0.241538512,"186":0.411700587,"339":0.411700587,"47":0.079962599,"482":0.100160608,"391":0.100160608,"403":0.140417449,"68":0.100160608,"89":0.100160608,"258":0.079962599,"471":0.092728658,"437":0.100160608,"145":0.169749178,"57":0.108523843},{"31":0.212341596,"491":0.212341596,"403":0.170212641,"236":0.235473674,"383":0.30030252,"189":0.323817235,"18":0.226058513,"246":0.323817235,"247":0.212341596,"47":0.062893444,"482":0.0787799,"391":0.0787799,"68":0.0787799,"89":0.0787799,"258":0.062893444,"471":0.072934406,"437":0.0787799,"284":0.125412367,"378":0.1335138,"161":0.154823132,"163":0.154823132,"347":0.14309576,"426":0.14309576,"145":0.1335138,"150":0.154823132,"393":0.097085256,"469":0.118394588,"424":0.14309576,"422":0.14309576,"319":0.125412367,"355":0.14309576,"318":0.14309576,"224":0.14309576,"215":0.14309576,"376":0.14309576,"139":0.14309576,"103":0.1335138},{"395":0.216221895,"350":0.241673976,"313":0.20555142,"359":0.216221895,"393":0.231889081,"205":0.216221895,"12":0.228150471,"47":0.0715814,"482":0.089662374,"391":0.089662374,"403":0.155801582,"68":0.089662374,"89":0.089662374,"258":0.0715814,"471":0.083009396,"437":0.089662374,"436":0.217670742,"34":0.217670742,"57":0.097149026,"400":0.089662374,"161":0.176210043,"163":0.176210043,"236":0.127704134,"347":0.162862679,"426":0.162862679,"145":0.151957089,"150":0.176210043,"469":0.134749344,"424":0.162862679,"422":0.162862679,"319":0.142736543,"355":0.162862679,"318":0.162862679,"224":0.162862679,"215":0.162862679,"376":0.162862679,"139":0.162862679,"103":0.151957089},{"55":0.221687786,"350":0.247783272,"313":0.210747571,"359":0.221687786,"393":0.237751024,"205":0.221687786,"12":0.233917906,"47":0.073390912,"482":0.091928957,"391":0.091928957,"403":0.159740103,"68":0.091928957,"89":0.091928957,"258":0.073390912,"471":0.085107798,"437":0.155649254,"286":0.180664471,"57":0.099604864,"400":0.091928957,"161":0.180664471,"163":0.180664471,"236":0.130932378,"347":0.166979698,"426":0.166979698,"145":0.155798424,"150":0.180664471,"469":0.138155684,"424":0.166979698,"422":0.166979698,"319":0.146344792,"355":0.166979698,"318":0.166979698,"224":0.166979698,"215":0.166979698,"376":0.166979698,"139":0.166979698,"103":0.155798424},{"313":0.215758222,"359":0.226958548,"393":0.243403699,"205":0.226958548,"12":0.239479446,"4":0.313164297,"273":0.386849147,"245":0.289443073,"293":0.386849147,"101":0.386849147,"47":0.075135825,"482":0.094114623,"391":0.094114623,"403":0.131941445,"68":0.094114623,"89":0.094114623,"258":0.075135825,"471":0.087131287,"437":0.094114623,"247":0.149824228},{"131":0.414523744,"294":0.466501515,"375":0.414523744,"90":0.466501515,"47":0.090606317,"482":0.113492855,"391":0.113492855,"403":0.159108232,"68":0.113492855,"89":0.113492855,"258":0.090606317,"471":0.105071648,"437":0.113492855,"417":0.27552331,"57":0.12296931,"400":0.113492855},{"459":0.310864821,"321":0.333174832,"401":0.360480079,"455":0.445297924,"11":0.360480079,"65":0.395682666,"47":0.086488047,"482":0.108334338,"391":0.108334338,"403":0.151876389,"68":0.108334338,"89":0.108334338,"258":0.086488047,"471":0.100295895,"437":0.108334338,"175":0.212905342,"57":0.117380066,"400":0.108334338},{"459":0.310864821,"321":0.333174832,"401":0.360480079,"439":0.445297924,"70":0.360480079,"242":0.395682666,"47":0.086488047,"482":0.108334338,"391":0.108334338,"403":0.151876389,"68":0.108334338,"89":0.108334338,"258":0.086488047,"471":0.100295895,"437":0.108334338,"175":0.212905342,"57":0.117380066,"400":0.108334338},{"65":0.388984751,"86":0.437760148,"310":0.160054582,"180":0.193447458,"18":0.180493854,"216":0.180493854,"320":0.169541737,"271":0.151686318,"156":0.209301389,"57":0.115393116,"31":0.169541737,"491":0.169541737,"403":0.088182235,"236":0.151686318,"9":0.193447458,"247":0.169541737,"284":0.169541737,"471":0.206919262,"378":0.180493854,"55":0.151686318,"350":0.169541737,"313":0.144200652,"359":0.151686318,"393":0.131247047,"205":0.151686318,"12":0.160054582},{"223":0.432157863,"12":0.331593891,"310":0.158006266,"180":0.190971793,"18":0.178183963,"216":0.178183963,"320":0.167372008,"271":0.149745096,"156":0.206622831,"57":0.11391636,"31":0.167372008,"491":0.167372008,"403":0.087053713,"236":0.149745096,"9":0.190971793,"247":0.167372008,"284":0.167372008,"346":0.255239396,"378":0.178183963,"55":0.149745096,"350":0.167372008,"313":0.142355227,"359":0.149745096,"393":0.129567398,"205":0.149745096,"319":0.167372008,"245":0.190971793},{"93":0.431515928,"236":0.313790095,"310":0.15777156,"180":0.190688119,"18":0.177919285,"216":0.177919285,"320":0.16712339,"271":0.149522661,"156":0.206315909,"57":0.113747146,"31":0.16712339,"491":0.16712339,"403":0.086924402,"9":0.190688119,"247":0.16712339,"469":0.15777156,"245":0.190688119,"378":0.177919285,"55":0.149522661,"350":0.16712339,"313":0.14214377,"359":0.149522661,"393":0.129374936,"205":0.149522661,"12":0.15777156,"286":0.206315909,"26":0.254860258},{"304":0.363734253,"276":0.409343451,"310":0.149664823,"180":0.180890039,"18":0.168777302,"216":0.168777302,"320":0.15853613,"271":0.141839775,"341":0.241764836,"57":0.107902505,"31":0.15853613,"491":0.15853613,"403":0.082457987,"236":0.141839775,"9":0.180890039,"247":0.15853613,"284":0.15853613,"219":0.241764836,"378":0.168777302,"55":0.141839775,"350":0.15853613,"313":0.134840032,"359":0.141839775,"393":0.122727296,"205":0.141839775,"12":0.149664823,"177":0.214827309,"504":0.195714829},{"47":0.067313617,"336":0.134226393,"307":0.114163825,"149":0.134226393,"258":0.067313617,"59":0.134226393,"284":0.134226393,"139":0.15315258,"320":0.134226393,"382":0.20469291,"105":0.15315258,"384":0.20469291,"501":0.20469291,"81":0.307959685,"412":0.20469291,"35":0.20469291,"240":0.181885951,"305":0.20469291,"511":0.20469291,"395":0.120090237,"400":0.142760378,"444":0.181885951,"141":0.181885951,"369":0.20469291,"178":0.20469291,"254":0.15315258,"60":0.20469291,"333":0.15315258,"51":0.20469291,"103":0.142897196,"332":0.20469291,"37":0.20469291},{"47":0.062474996,"336":0.124577962,"307":0.105957528,"149":0.124577962,"258":0.062474996,"59":0.124577962,"469":0.117606874,"495":0.260394265,"105":0.142143702,"254":0.142143702,"202":0.189979222,"408":0.168811667,"162":0.168811667,"244":0.321662784,"286":0.153793048,"489":0.153793048,"279":0.189979222,"27":0.189979222,"251":0.189979222,"393":0.096439319,"493":0.189979222,"458":0.189979222,"288":0.132625493,"49":0.132625493,"222":0.189979222,"345":0.189979222,"245":0.142143702,"466":0.189979222,"3":0.189979222,"353":0.189979222,"400":0.078255754,"174":0.189979222,"304":0.168811667,"257":0.189979222,"143":0.189979222},{"47":0.086131059,"336":0.171749222,"307":0.146078187,"149":0.171749222,"258":0.086131059,"59":0.171749222,"66":0.261914571,"313":0.146078187,"31":0.171749222,"491":0.171749222,"403":0.089330395,"236":0.15366132,"383":0.195966202,"62":0.261914571,"469":0.162138541,"424":0.195966202,"422":0.195966202,"319":0.171749222,"355":0.195966202,"318":0.195966202,"224":0.195966202,"215":0.195966202,"103":0.182843938,"105":0.195966202,"290":0.261914571,"376":0.195966202,"421":0.261914571,"75":0.232731953},{"47":0.068452369,"336":0.231109706,"307":0.116095147,"149":0.136497115,"258":0.068452369,"59":0.136497115,"99":0.208155723,"172":0.184962936,"303":0.208155723,"374":0.208155723,"249":0.208155723,"109":0.184962936,"167":0.184962936,"419":0.184962936,"242":0.184962936,"6":0.208155723,"299":0.208155723,"207":0.208155723,"331":0.208155723,"192":0.208155723,"443":0.208155723,"5":0.208155723,"475":0.208155723,"122":0.168507391,"145":0.145314604,"261":0.184962936,"162":0.184962936,"8":0.184962936,"102":0.208155723},{"47":0.063980299,"336":0.127579605,"307":0.10851052,"149":0.127579605,"258":0.108328063,"59":0.127579605,"208":0.172879098,"459":0.135821037,"489":0.266668333,"195":0.194556675,"469":0.120440552,"335":0.194556675,"67":0.194556675,"404":0.194556675,"136":0.194556675,"113":0.194556675,"252":0.172879098,"142":0.194556675,"401":0.157498613,"8":0.172879098,"488":0.194556675,"297":0.194556675,"24":0.194556675,"238":0.194556675,"373":0.194556675,"122":0.157498613,"393":0.098762975,"429":0.172879098,"203":0.172879098,"280":0.172879098,"395":0.11414346,"425":0.194556675,"63":0.194556675,"451":0.194556675},{"47":0.064410644,"336":0.128437732,"307":0.184960049,"149":0.128437732,"258":0.064410644,"59":0.128437732,"393":0.099427275,"327":0.195865303,"444":0.174041919,"377":0.195865303,"259":0.195865303,"131":0.174041919,"359":0.114911213,"333":0.146547706,"428":0.146547706,"177":0.174041919,"271":0.114911213,"480":0.195865303,"261":0.174041919,"172":0.174041919,"432":0.195865303,"375":0.174041919,"408":0.174041919,"313":0.109240385,"347":0.146547706,"75":0.174041919,"470":0.195865303,"81":0.174041919,"254":0.146547706,"337":0.195865303,"11":0.158557981,"459":0.136734597,"497":0.174041919,"461":0.195865303,"109":0.174041919,"2":0.195865303,"330":0.195865303,"205":0.114911213},{"255":0.133725305,"183":0.133725305,"429":0.283552817,"22":0.133725305,"459":0.093354338,"216":0.093354338,"426":0.169406405,"7":0.226416624,"383":0.100054152,"274":0.226416624,"334":0.226416624,"252":0.249368828,"270":0.226416624,"342":0.226416624,"267":0.133725305,"311":0.133725305,"29":0.118825583,"497":0.118825583,"175":0.108254061,"395":0.078454615,"130":0.226416624,"419":0.118825583,"179":0.133725305,"64":0.133725305,"230":0.133725305,"324":0.133725305,"122":0.108254061,"471":0.05099655,"298":0.133725305,"262":0.133725305,"168":0.133725305,"307":0.074582907,"489":0.108254061,"105":0.100054152,"277":0.133725305,"340":0.108254061,"141":0.118825583,"284":0.148471613,"11":0.108254061,"448":0.133725305,"203":0.118825583,"280":0.118825583,"48":0.133725305,"43":0.133725305,"361":0.133725305}],"notice":"此向量為字元 n-gram 雜湊 TF-IDF，不是神經網路語意 Embedding。"},"architecture":["來源雜湊檢查","文件切分","檢索前 ACL 過濾","字元向量相似度","引用清單","規則查核","人工審核"]}</script>
+<div class="app-frame"><aside aria-label="主要導覽" class="app-sidebar"><div class="brand" aria-label="ALAAKITA / DATA LAB">ALAAKITA / DATA LAB</div><div class="brand-sub">公開資料與 AI 證據研究</div><div class="workspace-stamp">RESEARCH · V5.8</div><nav aria-label="功能選單" class="nav" role="tablist"><button aria-controls="overview" aria-selected="true" class="tab" data-tab="overview" id="nav-overview" role="tab" type="button">研究總覽</button><button aria-controls="ask" aria-selected="false" class="tab" data-tab="ask" id="nav-ask" role="tab" type="button">證據問答</button><button aria-controls="docs" aria-selected="false" class="tab" data-tab="docs" id="nav-docs" role="tab" type="button">來源索引</button><button aria-controls="eval" aria-selected="false" class="tab" data-tab="eval" id="nav-eval" role="tab" type="button">品質評估</button><button aria-controls="guide" aria-selected="false" class="tab" data-tab="guide" id="nav-guide" role="tab" type="button">操作與架構</button></nav></aside><div class="app-body"><header class="workspace-top"><div><div class="top-heading">公開資料 × AI 證據研究</div><p class="top-caption">V5.8 · 離線研究版（非即時官方統計）</p></div><div class="pills"><span class="pill" id="modeBadge">模式 —</span><span class="pill" id="integrityBadge">來源核對 —</span><span class="pill">公開權限內容</span><span class="pill">離線字元向量檢索</span><span class="pill">未啟動 LLM</span></div></header><main class="workspace-content" id="workspace">
+<section aria-labelledby="nav-overview" class="panel" id="overview" role="tabpanel"><div class="sectionhead"><span class="eyebrow">01 / RESEARCH OVERVIEW</span><h2>研究總覽</h2><a class="quick-presentation" href="./presentation.html">查看十頁研究簡報</a><p class="desc">所有數字根據目前載入的資料包。DEMO 是人造資料，不可當作官方統計引用。</p><p class="desc">以公開資料建立可核對的研究證據：每一項數字都應能找到原始來源、驗證結果與適用範圍。</p><p class="desc status-explainer">檢索範圍：公開片段｜完整性：本機 SHA-256 驗證｜模型：未連接 LLM。正式資料請另行執行 API 擷取。</p></div><div class="stats"><div class="stat"><label>證據文件</label><b id="nDocs">—</b><small>含非公開文件的數量，內容未匯出</small></div><div class="stat"><label>文件片段</label><b id="nChunks">—</b><small>已切分與編號</small></div><div class="stat"><label>公開檢索片段</label><b id="nPublic">—</b><small>本檔案只內含公開片段</small></div><div class="stat"><label>離線評測通過</label><b id="nPassed">—</b><small>預設樣本檢核</small></div></div><div class="layout"><div class="sheet"><h3>數據處理流程</h3><div class="steps" id="steps"></div><p class="desc">真正的權限必須由經驗證的伺服器強制實施；此 HTML 沒有帳號登入，也無法保護已發送給使用者的檔案。</p></div><div class="sheet"><h3>研究範圍與證據</h3><p>研究期間：<strong id="window">—</strong></p><p>來源證據：<span class="mono" id="eid">—</span></p><p>向量方式：<strong>字元 n-gram 雜湊 TF-IDF</strong></p><p class="desc">此法可執行向量相似度檢索，但不是已訓練的神經語意模型。可透過 Python 選用 E5 和 Ollama。</p></div></div><div class="notice" style="margin-top:16px"><strong>研究限制</strong>　YouBike 即時車輛數只能描述觀測狀態；不能作為租借交易量、實際需求或因果關係的直接證據。</div></section>
+<section aria-labelledby="nav-ask" class="panel" hidden="" id="ask" role="tabpanel"><div class="sectionhead"><span class="eyebrow">02 / EVIDENCE-BOUND RETRIEVAL</span><h2>證據問答</h2><p class="desc">輸入問題後，以公開片段建立字元向量、計算相似度並顯示來源。結果是抽取式摘要，不會呼叫外部 API 或假裝由 LLM 生成。</p></div><div class="sheet"><div class="formrow"><input aria-label="研究問題" class="search" id="question" placeholder="例如：近週擷取時段完整率是多少？"/><button class="btn" id="searchBtn">查詢證據</button></div><div class="suggestions"><button class="example">近週擷取時段完整率是多少</button><button class="example">前週零車觀測比率是多少</button><button class="example">實際租借次數是多少</button></div><div id="answer"><p class="placeholder">請輸入研究問題，或選擇上方範例。</p></div></div><div class="notice" style="margin-top:16px">公開檢索僅載入 PUBLIC 文件。異常內部記錄與人工審查內容不會出現在此 HTML 原始碼中。此介面不具備正式身分驗證。</div></section>
+<section aria-labelledby="nav-docs" class="panel" hidden="" id="docs" role="tabpanel"><div class="sectionhead"><span class="eyebrow">03 / SOURCE INDEX</span><h2>可追溯的文件索引</h2><p class="desc">每段證據都有固定的 Chunk ID、原始文件識別碼、來源 URL 與 SHA-256。來源查核只證明本機檔案未被修改，不等於政府數位簽章。</p></div><div class="toolbar"><div class="desc">目前公開文件片段：<strong id="docCount">—</strong></div><div><select aria-label="選擇文件類型" id="catFilter"><option value="ALL">全部類型</option></select> <button class="btn secondary" id="exportSources">匯出來源 JSON</button></div></div><div class="doclist" id="docList"></div><button class="source-more" id="loadMoreSources" type="button" hidden>載入更多來源（8 筆）</button></section>
+<section aria-labelledby="nav-eval" class="panel" hidden="" id="eval" role="tabpanel"><div class="sectionhead"><span class="eyebrow">04 / QUALITY ASSURANCE</span><h2>RAG 品質評估</h2><p class="desc">以已標註的測試題目檢查「應命中的證據」與「必須拒答的問題」。評分不是 LLM 真實正確率。</p></div><div class="stats"><div class="stat"><label>測試題目</label><b id="evalTotal">—</b></div><div class="stat"><label>已通過</label><b id="evalPass">—</b></div></div><div class="sheet table-wrap"><table><thead><tr><th>測試問題</th><th>預期</th><th>狀態</th><th>結果</th></tr></thead><tbody id="testRows"></tbody></table></div><details><summary>如何判讀測試結果？</summary><p>命中測試只驗證特定指標是否出現在搜尋結果內；拒答測試則驗證資料無法支持的租借交易問題會被擋下。它們不能保證語意推論正確，人工查核仍不可省略。</p></details></section>
+<section aria-labelledby="nav-guide" class="panel" hidden="" id="guide" role="tabpanel"><div class="sectionhead"><span class="eyebrow">05 / IMPLEMENTATION GUIDE</span><h2>操作流程與技術邊界</h2><p class="desc">從零成本的本機示範，再到可選用的真正神經 Embedding 與 LLM 回答。</p></div><div class="layout"><div class="sheet"><h3>本機實作四階段</h3><p><strong>① 驗證來源：</strong>從 V1–V3 讀入 JSON 快照及 SQLite，核對雜湊與時間。</p><p><strong>② 文件切分：</strong>統計與方法文件建立 Chunk ID，附上證據 ID 與權限標籤。</p><p><strong>③ 檢索前 ACL：</strong>從可信的後端取得授權角色，只讓可見片段進入相似度計算及 LLM Prompt。</p><p><strong>④ 檢索與審核：</strong>返回來源片段，必要時交由本機 LLM 組織答案，並執行數字及引用驗證。</p><div class="notice">正式部署需要身分驗證、資料隔離、API 存取權限、稽核記錄與模型輸出人工審查；瀏覽器角色切換不是資安隔離。</div></div><div class="sheet"><h3>Windows CLI 指令</h3><div class="cli-unit"><div class="cli-unit-head"><span>指令 1</span><button class="cli-copy" type="button" aria-label="複製第 1 條指令">複製指令</button></div><div class="cli-block" tabindex="0"><code>py -3 v5.py demo</code></div></div><div class="cli-unit"><div class="cli-unit-head"><span>指令 2</span><button class="cli-copy" type="button" aria-label="複製第 2 條指令">複製指令</button></div><div class="cli-block" tabindex="0"><code>py -3 v5.py ask --mode DEMO --question "近週完整率是多少"</code></div></div><div class="cli-unit"><div class="cli-unit-head"><span>指令 3</span><button class="cli-copy" type="button" aria-label="複製第 3 條指令">複製指令</button></div><div class="cli-block" tabindex="0"><code>py -3 v5.py eval --mode DEMO</code></div></div><p>額外安裝神經 Embedding 後，使用 <code>--method e5</code>。</p><p>安裝並啟動 Ollama 後，使用 <code>--llm</code>；本地模型必須先下載，且每次生成結果都需要人工查核。</p><p class="desc">指令區可左右滑動檢視完整內容。完整安裝、LIVE 模式與排錯請參考壓縮檔內 README_V5.md。</p></div></div><div class="toolbar guide-export-actions"><button class="btn" id="exportJson">匯出公開證據包 JSON</button><button class="btn secondary" id="exportCsv">匯出公開證據索引 CSV</button></div></section>
+</main><footer class="foot">ALAAKITA PUBLIC DATA LAB · V5.8｜公開資料依原授權引用｜DEMO 非官方統計</footer></div></div><script>
+'use strict';
+const D=JSON.parse(document.getElementById('payload').textContent);
+const $=id=>document.getElementById(id);
+const txt=(el,s)=>{el.textContent=s==null?'—':String(s);};
+const noEvidence=['實際租借次數','借車次數','總人次','租借交易','交易量','騎乘人數','調度績效','因果關係','使用人數','預測準確'];
+const cjk=/^[\u3400-\u9fff]+$/;
+function tokens(text){let groups=String(text).toLowerCase().match(/[\u3400-\u9fff]+|[a-z0-9_]+/g)||[],a=[];for(let s of groups){if(cjk.test(s)){if(s.length===1)a.push(s);else for(let i=0;i<s.length-1;i++)a.push(s.slice(i,i+2));}else a.push(s);}return a;}
+function hash(t){let h=2166136261;for(let i=0;i<t.length;i++){h=Math.imul(h^t.charCodeAt(i),16777619)>>>0;}return String(h%D.index.dimension);}
+function vec(text){let c={},v={},norm=0;for(let t of tokens(text)){let k=hash(t);c[k]=(c[k]||0)+1;}for(let k in c){let s=(1+Math.log(c[k]))*(D.index.idf[k]||1);v[k]=s;norm+=s*s;}norm=Math.sqrt(norm);if(norm)for(let k in v)v[k]/=norm;return v;}
+function score(a,b){let v=0;for(let k in a)v+=a[k]*(b[k]||0);return v;}
+function hit(q){let qt=new Set(tokens(q)),v=vec(q),rows=[];D.public_chunks.forEach((ch,i)=>{let shared=tokens(ch.title+' '+ch.text).some(x=>qt.has(x));let s=score(v,D.index.vectors[i]);if(shared && s>=.065)rows.push({...ch,score:s});});return rows.sort((a,b)=>b.score-a.score).slice(0,4);}
+function el(tag,classname,value){let n=document.createElement(tag);if(classname)n.className=classname;if(value!==undefined)n.textContent=value;return n;}
+function renderSource(parent,ch){let box=el('article','result');box.appendChild(el('div','smallcaps',ch.category+' · '+ch.scope+' · 相似度 '+(ch.score===undefined?'—':ch.score.toFixed(3))));box.appendChild(el('h4','',ch.title));box.appendChild(el('p','',ch.text));box.appendChild(el('div','mono','證據 '+ch.chunk_id+' · '+ch.id+' · 雜湊 '+ch.sha256.slice(0,12)+'…'));if(ch.source_url){let a=el('a','', D.mode==='DEMO'?'官方資料集（僅供規格參考）':'官方資料集／來源參考');a.href=ch.source_url;a.target='_blank';a.rel='noopener noreferrer';box.appendChild(a);}parent.appendChild(box);}
+function search(){const q=$('question').value.trim();const area=$('answer');area.replaceChildren();let state,body,hits=[];if(!q){state='NEED_QUESTION';body='請輸入問題。';}else if(!D.source_integrity_verified){state='UNVERIFIABLE';body='來源驗證失敗，停止提供回答。';}else if(noEvidence.some(t=>q.includes(t))){state='NO_EVIDENCE';body='目前只有即時站點數據，沒有足夠證據推論租借交易量、調度績效與因果關係。';}else{hits=hit(q);state=hits.length?'EVIDENCE_FOUND':'NO_EVIDENCE';body=hits.length?'下列為相關統計／方法原文片段（非 LLM 生成），請依來源自行查核。':'目前公開授權的證據中找不到足夠直接的答案。';}let heading=el('div','response');heading.appendChild(el('div','status',state));heading.appendChild(el('h3','',body));area.appendChild(heading);hits.forEach(ch=>renderSource(area,ch));}
+for(let b of document.querySelectorAll('.tab'))b.addEventListener('click',()=>{const n=b.dataset.tab;document.querySelectorAll('.panel').forEach(p=>p.hidden=p.id!==n);document.querySelectorAll('.tab').forEach(x=>{x.setAttribute('aria-selected',x===b?'true':'false');x.tabIndex=x===b?0:-1;});const pane=document.getElementById('workspace');if(pane)pane.scrollTop=0;});
+$('searchBtn').onclick=search;$('question').onkeydown=e=>{if(e.key==='Enter')search();};document.querySelectorAll('button.example').forEach(b=>b.addEventListener('click',()=>{$('question').value=b.textContent;search();}));
+txt($('modeBadge'),D.mode+' · '+(D.mode==='DEMO'?'模擬資料':'來源快照'));$('modeBadge').classList.add(D.mode==='DEMO'?'bad':'good');txt($('integrityBadge'),D.source_integrity_verified?'本機 SHA-256 已核對':'來源未通過核對');$('integrityBadge').classList.add(D.source_integrity_verified?'good':'bad');
+txt($('nDocs'),D.docs_count);txt($('nChunks'),D.chunks_count);txt($('nPublic'),D.public_chunks_count);txt($('nPassed'),D.evaluation.passed+' / '+D.evaluation.total);txt($('window'),D.window.first_day+' ～ '+D.window.last_day);txt($('eid'),D.evidence_id);txt($('docCount'),D.public_chunks_count);txt($('evalPass'),D.evaluation.passed);txt($('evalTotal'),D.evaluation.total);
+D.architecture.forEach((s,i)=>{let d=el('div','step');d.appendChild(el('b','',String(i+1).padStart(2,'0')));d.appendChild(el('span','',s));$('steps').appendChild(d);});
+let cats=[...new Set(D.public_chunks.map(x=>x.category))];cats.sort();cats.forEach(c=>{let opt=el('option','',c);opt.value=c;$('catFilter').appendChild(opt);});
+let sourceShown=8;
+function docView(){
+ const node=$('docList');node.replaceChildren();
+ const arr=D.public_chunks.filter(c=>$('catFilter').value==='ALL'||c.category===$('catFilter').value);
+ const mobile=window.matchMedia('(max-width:640px)').matches;
+ const shown=mobile?Math.min(sourceShown,arr.length):arr.length;
+ arr.slice(0,shown).forEach(c=>renderSource(node,c));
+ const more=$('loadMoreSources');more.hidden=!mobile||shown>=arr.length;
+ if(!more.hidden)more.textContent='載入更多來源（尚有 '+(arr.length-shown)+' 筆）';
+}
+docView();
+$('catFilter').onchange=()=>{sourceShown=8;docView();};
+$('loadMoreSources').onclick=()=>{sourceShown+=8;docView();};
+window.addEventListener('resize',docView);
+
+for(let t of D.evaluation.rows){let tr=el('tr');[t.question,t.expect,t.status,t.passed?'通過':'未通過'].forEach((v,i)=>{let td=el('td');td.textContent=v;if(i===3){let tag=el('span','tag'+(t.passed?'':' warn'),v);td.replaceChildren(tag);}tr.appendChild(td);});$('testRows').appendChild(tr);}
+function download(name,body,mime){let blob=new Blob([body],{type:mime}),href=URL.createObjectURL(blob),a=document.createElement('a');a.href=href;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(href),1000);}
+$('exportJson').onclick=()=>download('ALAAKITA_V5_PUBLIC_'+D.mode+'.json',JSON.stringify(D,null,2),'application/json;charset=utf-8');
+$('exportSources').onclick=()=>download('ALAAKITA_V5_SOURCES_'+D.mode+'.json',JSON.stringify(D.public_chunks,null,2),'application/json;charset=utf-8');
+$('exportCsv').onclick=()=>{let keys=['chunk_id','id','category','title','text','scope','evidence_id','source_url','sha256'];let esc=x=>'"'+String(x??'').replaceAll('"','""')+'"';let csv='\ufeff'+keys.join(',')+'\r\n'+D.public_chunks.map(x=>keys.map(k=>esc(x[k])).join(',')).join('\r\n');download('ALAAKITA_V5_PUBLIC_'+D.mode+'.csv',csv,'text/csv;charset=utf-8');};
+</script><script id="v58-cli-copy">
+(function(){'use strict';
+ function fallback(text){const t=document.createElement('textarea');t.value=text;t.setAttribute('readonly','');t.style.position='fixed';t.style.opacity='0';document.body.appendChild(t);t.select();let ok=false;try{ok=document.execCommand('copy');}catch(e){}t.remove();return ok;}
+ document.querySelectorAll('.cli-unit').forEach(function(unit){
+  const b=unit.querySelector('.cli-copy'),code=unit.querySelector('code');
+  b.addEventListener('click',async function(){
+   const text=code.textContent;let ok=false;
+   if(navigator.clipboard&&navigator.clipboard.writeText){try{await navigator.clipboard.writeText(text);ok=true;}catch(e){}}
+   if(!ok)ok=fallback(text);
+   b.textContent=ok?'已複製':'請長按指令複製';b.setAttribute('aria-live','polite');
+  });
+ });
+})();
+</script></body></html>
