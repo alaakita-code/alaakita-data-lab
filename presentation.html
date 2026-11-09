@@ -6,7 +6,7 @@
 <meta name="color-scheme" content="light">
 <meta name="theme-color" content="#f7f4ed">
 <meta name="description" content="ALAAKITA Public Data Lab V5.9｜以可追溯的資料與證據，建立可審查的研究決策。">
-<title>ALAAKITA｜Public Data Lab 專業研究簡報 V5.9｜桌機版修正版</title>
+<title>ALAAKITA｜Public Data Lab 專業研究簡報 V5.9｜桌機與手機修正版（手機閱讀優化）</title>
 <style>
 :root{--paper:#f7f4ed;--paper2:#fcfaf6;--white:#fffdf8;--ink:#29231e;--sub:#686057;--line:#ded5c8;--line2:#ebe3d8;--rust:#a54f39;--rust2:#833d2c;--pale:#f4e7dd;--olive:#596b53;--sage:#eaf0e7;--radius:18px;--rail:256px}
 *,*::before,*::after{box-sizing:border-box}
@@ -251,6 +251,74 @@ h3{font-size:17px;line-height:1.45;margin:0 0 11px}
  .mobile-header small{font-size:8.5px;letter-spacing:0}
  .mobile-header button{padding:6px 8px}
 }
+
+/* V5.9.3 Mobile UX: separate reading content from fixed navigation, compact spacing. */
+@media screen and (max-width:850px){
+ :root{--mobile-nav-height:calc(72px + env(safe-area-inset-bottom,0px))}
+ .workspace{min-width:0;overflow:visible}
+ .mobile-header{z-index:31}
+ .mobile-chapters{z-index:30}
+ .mobile-chapters .mobile-index-grid{max-height:min(44dvh,320px);overscroll-behavior:contain;overflow-y:auto;overflow-x:hidden}
+ .mobile-chapters .chapter-btn{min-width:0;overflow-wrap:anywhere}
+ .main{padding-bottom:14px;overflow:visible}
+ .sheet{overflow-wrap:break-word}
+ .below-slide{padding:13px 5px 8px;gap:4px}
+ .footer{margin:0;padding:10px 16px calc(var(--mobile-nav-height) + 12px);text-align:center;line-height:1.5}
+ .bottom-controls{z-index:50;min-height:var(--mobile-nav-height);padding:9px max(14px,env(safe-area-inset-left,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(14px,env(safe-area-inset-right,0px));gap:10px}
+ .bottom-controls .counter{flex:1;text-align:center}
+ .bottom-controls button{flex:none}
+}
+@media screen and (max-width:550px){
+ .main{padding:14px 12px 12px}
+ .sheet{padding:22px 18px 23px}
+ .sheet .lead{line-height:1.65}
+ .sheet .paper-card{padding:15px}
+ .sheet .note{margin-top:13px}
+ .below-slide{align-items:flex-start;gap:3px}
+ .footer{padding-bottom:calc(var(--mobile-nav-height) + 14px)}
+ .bottom-controls{gap:8px}
+ .bottom-controls button{min-width:90px;min-height:44px}
+}
+@media screen and (max-width:359px){
+ .bottom-controls button{min-width:78px}
+ .mobile-chapters .mobile-index-grid{grid-template-columns:1fr 1fr}
+}
+/* V5.9.3 mobile reading improvement: browser header, sticky index, readable cards. */
+@media screen and (max-width:850px){
+ /* The brand and its two actions are shown at the start, then scroll away.
+    Keeping only the chapter selector pinned leaves more vertical room for reading. */
+ .mobile-header{position:relative;top:auto;z-index:30}
+ .mobile-chapters{position:sticky;top:0;z-index:29;background:var(--paper)}
+ .mobile-chapters summary{min-height:46px}
+ .mobile-chapters[open]{box-shadow:0 7px 18px rgba(41,35,30,.06)}
+ .mobile-chapters .mobile-index-grid{overscroll-behavior:contain}
+ /* Reserve bottom space only once, below the centered footer. */
+ .main{padding-bottom:12px}
+ .footer{padding:12px 16px calc(92px + env(safe-area-inset-bottom));text-align:center}
+ .below-slide{overflow-wrap:anywhere}
+ .bottom-controls{background:var(--paper)}
+}
+@media screen and (max-width:550px){
+ .mobile-chapters{top:0}
+ .main{padding-bottom:12px}
+ .footer{padding:14px 16px calc(90px + env(safe-area-inset-bottom));text-align:center}
+ h1{font-size:clamp(33px,8.7vw,42px)}
+ h2{font-size:clamp(30px,7.7vw,36px)}
+ .statement{font-size:clamp(20px,5.8vw,23px);line-height:1.6}
+ .sheet .lead{line-height:1.67}
+ .sheet .paper-card{padding:15px}
+ .sheet .method{padding:16px}
+ .sheet .gen-flow>div{padding:15px}
+ .sheet .risk-item{padding:15px}
+ .sheet .note{padding:12px 13px}
+ .sheet .cover-sub{gap:7px}
+ .sheet .cover-sub .chip{font-size:10px;padding:5px 8px}
+ .sheet .cover-footer{gap:7px}
+}
+@media screen and (max-width:359px){
+ .mobile-chapters summary{padding-left:12px;padding-right:12px}
+ .footer{padding-bottom:calc(94px + env(safe-area-inset-bottom))}
+}
 @media print{
  @page{size:297mm 210mm;margin:9mm}
  html,body{width:auto!important;height:auto!important;min-height:0!important;overflow:visible!important;background:white!important;font-size:12px}
@@ -350,6 +418,8 @@ function fromHash(){const m=location.hash.match(/^#slide-(\d{1,2})$/);return m?M
 document.getElementById('prev').addEventListener('click',()=>go(page-1));document.getElementById('next').addEventListener('click',()=>go(page+1));
 document.querySelectorAll('[data-print]').forEach(b=>b.addEventListener('click',()=>window.print()));
 document.getElementById('mobileHome').addEventListener('click',()=>{location.href='./index.html'});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&mobileDetails.open){mobileDetails.open=false}});
+document.addEventListener('pointerdown',e=>{if(mobileDetails.open&&!mobileDetails.contains(e.target)){mobileDetails.open=false}});
 window.addEventListener('hashchange',()=>go(fromHash(),false));
 document.addEventListener('keydown',e=>{if(e.altKey||e.ctrlKey||e.metaKey||['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName))return;if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();go(page+1)}else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(page-1)}else if(e.key==='Home'){e.preventDefault();go(0)}else if(e.key==='End'){e.preventDefault();go(slides.length-1)}});
 let x0=null,y0=null;const main=document.getElementById('mainContent');
