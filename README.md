@@ -2,7 +2,7 @@
 
 **讓每一項數據洞見，都有可以追溯的證據。**
 
-ALAAKITA Public Data Lab 是一套結合**公開資料分析、資料品質管理、證據檢索與研究成果展示**的互動工作台。
+ALAAKITA Public Data Lab 是一套結合**公開資料分析、資料品質管理、證據檢索與研究成果展示**的互動工作室。
 
 從資料擷取、清理與歷史比較，到文件切分、來源引用與檢索品質評估，建立可理解、可查核、可逐步擴充的資料研究流程。
 
@@ -10,7 +10,7 @@ ALAAKITA Public Data Lab 是一套結合**公開資料分析、資料品質管�
 
 ## 線上體驗
 
-- **[開啟互動研究工作台](https://alaakita-code.github.io/alaakita-data-lab/)**
+- **[開啟互動研究工作室](https://alaakita-code.github.io/alaakita-data-lab/)**
 - **[開啟十頁研究簡報](https://alaakita-code.github.io/alaakita-data-lab/presentation.html)**
 
 支援 Android 手機、平板及桌機瀏覽器，採響應式網頁設計。
@@ -43,7 +43,7 @@ ALAAKITA Public Data Lab 是一套結合**公開資料分析、資料品質管�
         ↓
 來源引用、拒答與品質評估
         ↓
-互動工作台與研究簡報
+互動工作室與研究簡報
 ```
 
 這是專案的整體研究架構。目前公開的 V5.8 網頁屬於靜態 DEMO，不會自動擷取即時 API 或執行後端 Python 程式。
@@ -66,7 +66,7 @@ ALAAKITA Public Data Lab 是一套結合**公開資料分析、資料品質管�
 
 ```text
 alaakita-data-lab/
-├── index.html          # 互動研究工作台
+├── index.html          # 互動研究工作室
 ├── presentation.html   # 十頁研究簡報
 └── README.md           # 專案說明
 ```
